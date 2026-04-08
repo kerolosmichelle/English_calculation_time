@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Work Records Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #111111;
+      --surface:     #1E1E1E;
+      --border:      rgba(255,255,255,0.09);
+      --border-md:   rgba(255,255,255,0.18);
+      --text:        #F0F0EE;
+      --text-muted:  #8A8A86;
+      --text-faint:  #4A4A48;
+
+      /* Work type accents — vivid on dark */
+      --health-bg:   #0D3528;
+      --health-fg:   #5DD4A8;
+      --health-dot:  #3DBF8C;
+
+      --english-bg:  #0D2140;
+      --english-fg:  #70B8F5;
+      --english-dot: #4A9EE8;
+
+      --arabic-bg:   #1A1240;
+      --arabic-fg:   #B0A8F8;
+      --arabic-dot:  #8880E8;
+
+      --danger-bg:   #3A1212;
+      --danger-fg:   #F08080;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+
+      --shadow-card: 0 2px 6px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* ─── Layout ───────────────────────────────────────────── */
+    .app {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ─── Header ───────────────────────────────────────────── */
+    .header {
+      margin-bottom: 2rem;
+    }
+    .header-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 6px;
+    }
+    .header-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .header-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ─── Card ─────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 1rem;
+    }
+    .card-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 12px;
+    }
+
+    /* ─── Work Type Buttons ────────────────────────────────── */
+    .type-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .type-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font-body);
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      width: 100%;
+    }
+    .type-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-md); }
+    .type-btn:active { transform: scale(0.99); }
+
+    .type-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .type-btn.health  .type-icon { background: var(--health-bg);  color: var(--health-fg); }
+    .type-btn.english .type-icon { background: var(--english-bg); color: var(--english-fg); }
+    .type-btn.arabic  .type-icon { background: var(--arabic-bg);  color: var(--arabic-fg); }
+
+    .type-info { flex: 1; }
+    .type-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+    }
+    .type-rate {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 1px;
+    }
+
+    .type-arrow {
+      font-size: 16px;
+      color: var(--text-faint);
+    }
+
+    /* ─── Time Inputs ──────────────────────────────────────── */
+    .time-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .field-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .field input {
+      width: 100%;
+      padding: 10px 44px 10px 14px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: #161616;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -moz-appearance: textfield;
+    }
+    .field input::-webkit-inner-spin-button,
+    .field input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .field input:focus {
+      border-color: var(--border-md);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+      background: var(--surface);
+    }
+    .field-unit {
+      position: absolute;
+      right: 12px;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+
+    /* ─── Records ──────────────────────────────────────────── */
+    .records-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .records-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+    .records-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-faint);
+      font-size: 14px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .empty-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 8px;
+      opacity: 0.5;
+    }
+
+    /* ─── Record Item ──────────────────────────────────────── */
+    .record-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #171717;
+      animation: slideIn 0.2s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .record-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 5px;
+    }
+    .record-dot.health  { background: var(--health-dot); }
+    .record-dot.english { background: var(--english-dot); }
+    .record-dot.arabic  { background: var(--arabic-dot); }
+
+    .record-body { flex: 1; min-width: 0; }
+    .record-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .record-type {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .record-cost {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .record-meta {
+      font-size: 12px;
+      color: var(--text-faint);
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+
+    .del-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      color: var(--text-faint);
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+      margin-top: 1px;
+    }
+    .del-btn:hover { background: var(--danger-bg); color: var(--danger-fg); }
+
+    /* ─── Total ────────────────────────────────────────────── */
+    .calc-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .calc-btn:hover {
+      background: var(--text);
+      color: #0F0F0F;
+      border-color: var(--text);
+    }
+
+    .total-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      margin-top: 10px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.06);
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .total-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .total-amount {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    /* ─── Toast ────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--text);
+      color: #fff;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      padding: 9px 18px;
+      border-radius: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      white-space: nowrap;
+      z-index: 999;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ─── Responsive ───────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .header-title { font-size: 22px; }
+      .time-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <p class="header-eyebrow">Freelance Tracker</p>
+    <h1 class="header-title">Work Records Calculator</h1>
+    <p class="header-sub">Pick a work type, enter your time, and log the session.</p>
+  </div>
+
+
+
+  <!-- Time Input -->
+  <div class="card">
+    <p class="card-label">Time worked</p>
+    <div class="time-row">
+      <div class="field">
+        <label for="hours-input">Hours</label>
+        <div class="field-inner">
+          <input type="number" id="hours-input" min="0" max="23" placeholder="0" />
+          <span class="field-unit">hr</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="mins-input">Minutes</label>
+        <div class="field-inner">
+          <input type="number" id="mins-input" min="0" max="59" placeholder="0" />
+          <span class="field-unit">min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Work Type Buttons (now at bottom) -->
+  <div class="card">
+    <p class="card-label">Work type</p>
+    <div class="type-grid">
+
+      <button class="type-btn health" onclick="addRecord('Healthcare', 450, 'health')">
+        <span class="type-icon">H</span>
+        <span class="type-info">
+          <span class="type-name">Healthcare</span>
+          <span class="type-rate">450 EGP / hour</span>
+        </span>
+        <span class="type-arrow">→</span>
+      </button>
+
+      <button class="type-btn english" onclick="addRecord('English Customer', 350, 'english')">
+        <span class="type-icon">E</span>
+        <span class="type-info">
+          <span class="type-name">English Customer</span>
+          <span class="type-rate">350 EGP / hour</span>
+        </span>
+        <span class="type-arrow">→</span>
+      </button>
+
+      <button class="type-btn arabic" onclick="addRecord('Arabic Customer', 250, 'arabic')">
+        <span class="type-icon">A</span>
+        <span class="type-info">
+          <span class="type-name">Arabic Customer</span>
+          <span class="type-rate">250 EGP / hour</span>
+        </span>
+        <span class="type-arrow">→</span>
+      </button>
+
+  <!-- Records List (now on top) -->
+  <div class="card">
+    <div class="records-header">
+      <p class="card-label" style="margin:0;">Records</p>
+      <span class="records-count" id="record-count">0 entries</span>
+    </div>
+
+    <div class="records-list" id="records-list">
+      <div class="empty-state" id="empty-state">
+        <span class="empty-icon">📋</span>
+        No records yet.<br>Select a work type below to get started.
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="calcTotal()">Calculate Total</button>
+
+    <div class="total-bar" id="total-bar" style="display:none;">
+      <span class="total-label">Total earnings</span>
+      <span class="total-amount" id="total-amount">0.00 EGP</span>
+    </div>
+  </div>
+    </div>
+
+</div>
+
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+
+<script>
+  // ─── Storage Key ────────────────────────────────────────
+  const STORAGE_KEY = 'work_records_v2';
+
+  // ─── Records Array ──────────────────────────────────────
+  let records = [];
+
+  // ─── Load records from localStorage on page load ────────
+  function loadRecords() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) records = JSON.parse(saved);
+    } catch (e) {
+      records = [];
+    }
+    renderAll();
+  }
+
+  // ─── Save records to localStorage ───────────────────────
+  function saveRecords() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (e) {
+      console.warn('localStorage unavailable:', e);
+    }
+  }
+
+  // ─── Format date: "08 Apr 2026 — 03:25 PM" ──────────────
+  function formatDate(isoString) {
+    const d = new Date(isoString);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const day   = String(d.getDate()).padStart(2, '0');
+    const month = months[d.getMonth()];
+    const year  = d.getFullYear();
+    let   h     = d.getHours();
+    const ampm  = h >= 12 ? 'PM' : 'AM';
+    if (h > 12) h -= 12;
+    if (h === 0) h = 12;
+    const min = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year} — ${h}:${min} ${ampm}`;
+  }
+
+  // ─── Add a new record ────────────────────────────────────
+  function addRecord(type, rate, colorKey) {
+    const hoursEl = document.getElementById('hours-input');
+    const minsEl  = document.getElementById('mins-input');
+
+    const h = parseInt(hoursEl.value) || 0;
+    const m = parseInt(minsEl.value)  || 0;
+
+    // Validation
+    if (h === 0 && m === 0) {
+      showToast('Enter at least 1 minute.');
+      return;
+    }
+    if (m > 59) {
+      showToast('Minutes must be between 0 and 59.');
+      return;
+    }
+
+    // Calculate cost
+    const totalHours = h + (m / 60);
+    const cost = parseFloat((totalHours * rate).toFixed(2));
+
+    // Build record object
+    const record = {
+      id:        Date.now(),
+      type:      type,
+      colorKey:  colorKey,
+      rate:      rate,
+      hours:     h,
+      minutes:   m,
+      cost:      cost,
+      timestamp: new Date().toISOString()
+    };
+
+    records.push(record);
+    saveRecords();
+    renderAll();
+
+    // Clear inputs
+    hoursEl.value = '';
+    minsEl.value  = '';
+
+    // Hide total bar (stale after new entry)
+    document.getElementById('total-bar').style.display = 'none';
+
+    showToast('Record saved.');
+  }
+
+  // ─── Delete a record by id ───────────────────────────────
+  function deleteRecord(id) {
+    records = records.filter(r => r.id !== id);
+    saveRecords();
+    renderAll();
+    document.getElementById('total-bar').style.display = 'none';
+    showToast('Record deleted.');
+  }
+
+  // ─── Calculate and display total ────────────────────────
+  function calcTotal() {
+    if (records.length === 0) {
+      showToast('No records to calculate.');
+      return;
+    }
+    const total = records.reduce((sum, r) => sum + r.cost, 0);
+    document.getElementById('total-amount').textContent = total.toFixed(2) + ' EGP';
+    document.getElementById('total-bar').style.display = 'flex';
+  }
+
+  // ─── Render the full records list ───────────────────────
+  function renderAll() {
+    const list     = document.getElementById('records-list');
+    const countEl  = document.getElementById('record-count');
+
+    // Update entry count
+    countEl.textContent = records.length + (records.length === 1 ? ' entry' : ' entries');
+
+    // Empty state
+    if (records.length === 0) {
+      list.innerHTML = `
+        <div class="empty-state" id="empty-state">
+          <span class="empty-icon">📋</span>
+          No records yet.<br>Select a work type above to get started.
+        </div>`;
+      return;
+    }
+
+    // Render records newest-first
+    list.innerHTML = records.slice().reverse().map(r => `
+      <div class="record-item">
+        <span class="record-dot ${r.colorKey}"></span>
+        <div class="record-body">
+          <div class="record-top">
+            <span class="record-type">${r.type}</span>
+            <span class="record-cost">${r.cost.toFixed(2)} EGP</span>
+          </div>
+          <p class="record-meta">${r.hours}h ${r.minutes}m &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
+        </div>
+        <button class="del-btn" onclick="deleteRecord(${r.id})" title="Delete record">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // ─── Toast notification ──────────────────────────────────
+  let toastTimer = null;
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+  }
+
+  // ─── Init ────────────────────────────────────────────────
+  loadRecords();
+</script>
+
+</body>
+</html>
