@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Work Records Calculator</title>
+  <title>Work Records · Project Title · Hours/Minutes/Seconds</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -36,9 +36,6 @@
       --danger-bg:   #3A1212;
       --danger-fg:   #F08080;
 
-      --edit-bg:     #1A2A12;
-      --edit-fg:     #8FD46A;
-
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 16px;
@@ -60,12 +57,14 @@
     }
 
     .app {
-      max-width: 640px;
+      max-width: 720px;
       margin: 0 auto;
     }
 
     /* ─── Header ───────────────────────────────────────────── */
-    .header { margin-bottom: 2rem; }
+    .header {
+      margin-bottom: 2rem;
+    }
     .header-eyebrow {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -74,8 +73,17 @@
       color: var(--text-faint);
       margin-bottom: 6px;
     }
-    .header-title { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1.2; }
-    .header-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .header-title {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    .header-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
 
     /* ─── Card ─────────────────────────────────────────────── */
     .card {
@@ -96,17 +104,19 @@
     }
 
     /* ─── Project Title Input ──────────────────────────────── */
-    .title-field { margin-bottom: 0; }
-    .title-field label {
+    .project-field {
+      margin-bottom: 1rem;
+    }
+    .project-field label {
       display: block;
       font-size: 13px;
       color: var(--text-muted);
       margin-bottom: 6px;
       font-weight: 500;
     }
-    .title-field input {
+    .project-field input {
       width: 100%;
-      padding: 10px 14px;
+      padding: 12px 14px;
       border: 1px solid var(--border-md);
       border-radius: var(--radius-sm);
       background: #161616;
@@ -114,38 +124,23 @@
       font-weight: 500;
       color: var(--text);
       outline: none;
-      font-family: var(--font-body);
       transition: border-color 0.15s, box-shadow 0.15s;
+      font-family: var(--font-body);
     }
-    .title-field input::placeholder { color: var(--text-faint); }
-    .title-field input:focus {
+    .project-field input:focus {
       border-color: var(--border-md);
       box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
       background: var(--surface);
     }
-
-    /* ─── Time Inputs ──────────────────────────────────────── */
-    .session-block { margin-top: 14px; }
-    .session-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
+    .project-field input::placeholder {
       color: var(--text-faint);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-weight: 400;
     }
-    .session-label::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+
+    /* ─── Time Inputs with SECONDS (3 columns) ─────────────── */
     .time-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 12px;
     }
     .field label {
@@ -188,28 +183,17 @@
       color: var(--text-faint);
       pointer-events: none;
     }
-
-    /* Second session toggle */
-    .add-session-btn {
-      margin-top: 10px;
-      background: none;
-      border: 1px dashed var(--border-md);
-      border-radius: var(--radius-sm);
-      color: var(--text-faint);
-      font-family: var(--font-body);
-      font-size: 13px;
-      padding: 8px 14px;
-      cursor: pointer;
-      width: 100%;
-      transition: color 0.15s, border-color 0.15s;
+    .field-unit.sec-unit {
+      right: 8px;
+      font-size: 10px;
     }
-    .add-session-btn:hover { color: var(--text-muted); border-color: var(--border-md); }
-
-    #session2-block { display: none; }
-    #session2-block.visible { display: block; }
 
     /* ─── Work Type Buttons ────────────────────────────────── */
-    .type-grid { display: flex; flex-direction: column; gap: 8px; }
+    .type-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
     .type-btn {
       display: flex;
@@ -244,19 +228,45 @@
     .type-btn.arabic  .type-icon { background: var(--arabic-bg);  color: var(--arabic-fg); }
 
     .type-info { flex: 1; }
-    .type-name { font-size: 14px; font-weight: 500; color: var(--text); display: block; }
-    .type-rate { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); display: block; margin-top: 1px; }
-    .type-arrow { font-size: 16px; color: var(--text-faint); }
+    .type-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      display: block;
+    }
+    .type-rate {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 1px;
+    }
 
-    /* ─── Records ──────────────────────────────────────────── */
+    .type-arrow {
+      font-size: 16px;
+      color: var(--text-faint);
+    }
+
+    /* ─── Records List ─────────────────────────────────────── */
     .records-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
     }
-    .records-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
-    .records-list { display: flex; flex-direction: column; gap: 6px; }
+    .records-count {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-faint);
+    }
+    .records-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
     .empty-state {
       text-align: center;
       padding: 2rem 1rem;
@@ -265,9 +275,14 @@
       border: 1px dashed var(--border);
       border-radius: var(--radius-sm);
     }
-    .empty-icon { font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.5; }
+    .empty-icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 8px;
+      opacity: 0.5;
+    }
 
-    /* ─── Record Item ──────────────────────────────────────── */
+    /* ─── Record Item (with project title) ─────────────────── */
     .record-item {
       display: flex;
       align-items: flex-start;
@@ -277,10 +292,6 @@
       border-radius: var(--radius-sm);
       background: #171717;
       animation: slideIn 0.2s ease;
-    }
-    .record-item.editing {
-      border-color: var(--border-md);
-      background: #1a1a1a;
     }
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(-6px); }
@@ -303,13 +314,12 @@
       justify-content: space-between;
       align-items: baseline;
       gap: 8px;
+      flex-wrap: wrap;
     }
-    .record-type { font-size: 14px; font-weight: 500; color: var(--text); }
-    .record-title-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-top: 1px;
+    .record-type {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
     }
     .record-cost {
       font-family: var(--font-mono);
@@ -318,21 +328,24 @@
       color: var(--text);
       white-space: nowrap;
     }
-    .record-meta {
-      font-size: 12px;
-      color: var(--text-faint);
-      margin-top: 2px;
+    .record-project {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-top: 4px;
       font-family: var(--font-mono);
     }
-
-    /* ─── Record action buttons ────────────────────────────── */
-    .record-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      flex-shrink: 0;
+    .record-meta {
+      font-size: 11px;
+      color: var(--text-faint);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      line-height: 1.4;
     }
-    .del-btn, .edit-btn {
+    .del-btn {
       background: none;
       border: none;
       cursor: pointer;
@@ -342,96 +355,15 @@
       align-items: center;
       justify-content: center;
       border-radius: 6px;
+      color: var(--text-faint);
       font-size: 13px;
       flex-shrink: 0;
       transition: background 0.15s, color 0.15s;
+      margin-top: 1px;
     }
-    .del-btn { color: var(--text-faint); }
     .del-btn:hover { background: var(--danger-bg); color: var(--danger-fg); }
-    .edit-btn { color: var(--text-faint); }
-    .edit-btn:hover { background: var(--edit-bg); color: var(--edit-fg); }
 
-    /* ─── Inline Edit Form ─────────────────────────────────── */
-    .edit-form {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .edit-form input[type="text"],
-    .edit-form input[type="number"] {
-      background: #161616;
-      border: 1px solid var(--border-md);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 14px;
-      padding: 7px 10px;
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
-      -moz-appearance: textfield;
-      width: 100%;
-    }
-    .edit-form input::-webkit-inner-spin-button,
-    .edit-form input::-webkit-outer-spin-button { -webkit-appearance: none; }
-    .edit-form input:focus {
-      border-color: var(--border-md);
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
-    }
-    .edit-form input::placeholder { color: var(--text-faint); }
-    .edit-time-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .edit-time-row .ef-label {
-      font-size: 11px;
-      color: var(--text-faint);
-      font-family: var(--font-mono);
-      margin-bottom: 4px;
-    }
-    .edit-session-sep {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      margin-top: 2px;
-    }
-    .edit-actions {
-      display: flex;
-      gap: 6px;
-    }
-    .save-btn {
-      flex: 1;
-      padding: 8px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--edit-fg);
-      background: var(--edit-bg);
-      color: var(--edit-fg);
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-    .save-btn:hover { opacity: 0.85; }
-    .cancel-btn {
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-md);
-      background: transparent;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 13px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .cancel-btn:hover { background: rgba(255,255,255,0.04); }
-
-    /* ─── Total ────────────────────────────────────────────── */
+    /* ─── Total Bar & Button ───────────────────────────────── */
     .calc-btn {
       width: 100%;
       margin-top: 10px;
@@ -446,7 +378,11 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .calc-btn:hover { background: var(--text); color: #0F0F0F; border-color: var(--text); }
+    .calc-btn:hover {
+      background: var(--text);
+      color: #0F0F0F;
+      border-color: var(--text);
+    }
 
     .total-bar {
       display: flex;
@@ -459,9 +395,20 @@
       background: rgba(255,255,255,0.06);
       animation: fadeIn 0.2s ease;
     }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .total-label { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
-    .total-amount { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--text); }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+    .total-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+    .total-amount {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text);
+    }
 
     /* ─── Toast ────────────────────────────────────────────── */
     .toast {
@@ -470,7 +417,7 @@
       left: 50%;
       transform: translateX(-50%) translateY(8px);
       background: var(--text);
-      color: #111;
+      color: #0a0a0a;
       font-size: 13px;
       font-family: var(--font-mono);
       padding: 9px 18px;
@@ -480,13 +427,21 @@
       transition: opacity 0.2s, transform 0.2s;
       white-space: nowrap;
       z-index: 999;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* ─── Responsive ───────────────────────────────────────── */
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .header-title { font-size: 22px; }
-      .time-row { grid-template-columns: 1fr 1fr; }
+      .time-row { gap: 8px; }
+      .field input { font-size: 15px; padding: 8px 38px 8px 12px; }
+      .record-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .toast { white-space: normal; max-width: 85%; text-align: center; }
     }
   </style>
 </head>
@@ -498,71 +453,53 @@
   <div class="header">
     <p class="header-eyebrow">Freelance Tracker</p>
     <h1 class="header-title">Work Records Calculator</h1>
-    <p class="header-sub">Pick a work type, enter your time, and log the session.</p>
+    <p class="header-sub">Track projects, work types, and precise time (hours · minutes · seconds).</p>
   </div>
 
-  <!-- Time Input -->
+  <!-- Project Title + Time Input Card -->
   <div class="card">
-    <p class="card-label">Session details</p>
-
-    <!-- Project Title -->
-    <div class="title-field">
-      <label for="project-title">Project title <span style="color:var(--text-faint);font-weight:400;">(optional)</span></label>
-      <input type="text" id="project-title" placeholder="e.g. Website redesign, Client report…" autocomplete="off" />
+    <p class="card-label">📌 Project & Time</p>
+    
+    <!-- Project Title Input (NEW) -->
+    <div class="project-field">
+      <label for="project-title">Project title</label>
+      <input type="text" id="project-title" placeholder="e.g., Alpha Dashboard, Client Report, Website Redesign" autocomplete="off" />
     </div>
-
-    <!-- Session 1 -->
-    <div class="session-block">
-      <div class="session-label">Session 1</div>
-      <div class="time-row">
-        <div class="field">
-          <label for="hours-input">Hours</label>
-          <div class="field-inner">
-            <input type="number" id="hours-input" min="0" max="23" placeholder="0" />
-            <span class="field-unit">hr</span>
-          </div>
+    
+    <!-- Time Inputs (Hours + Minutes + Seconds) -->
+    <div class="time-row">
+      <div class="field">
+        <label for="hours-input">Hours</label>
+        <div class="field-inner">
+          <input type="number" id="hours-input" min="0" max="23" placeholder="0" value="0" />
+          <span class="field-unit">hr</span>
         </div>
-        <div class="field">
-          <label for="mins-input">Minutes</label>
-          <div class="field-inner">
-            <input type="number" id="mins-input" min="0" max="59" placeholder="0" />
-            <span class="field-unit">min</span>
-          </div>
+      </div>
+      <div class="field">
+        <label for="mins-input">Minutes</label>
+        <div class="field-inner">
+          <input type="number" id="mins-input" min="0" max="59" placeholder="0" value="0" />
+          <span class="field-unit">min</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="secs-input">Seconds</label>
+        <div class="field-inner">
+          <input type="number" id="secs-input" min="0" max="59" placeholder="0" value="0" />
+          <span class="field-unit sec-unit">sec</span>
         </div>
       </div>
     </div>
-
-    <!-- Session 2 (hidden by default) -->
-    <div class="session-block" id="session2-block">
-      <div class="session-label">Session 2</div>
-      <div class="time-row">
-        <div class="field">
-          <label for="hours2-input">Hours</label>
-          <div class="field-inner">
-            <input type="number" id="hours2-input" min="0" max="23" placeholder="0" />
-            <span class="field-unit">hr</span>
-          </div>
-        </div>
-        <div class="field">
-          <label for="mins2-input">Minutes</label>
-          <div class="field-inner">
-            <input type="number" id="mins2-input" min="0" max="59" placeholder="0" />
-            <span class="field-unit">min</span>
-          </div>
-        </div>
-      </div>
+    <div style="font-size: 11px; font-family: var(--font-mono); color: var(--text-faint); margin-top: 8px; text-align: right;">
+      ⚡ Seconds → decimal hours for precise cost
     </div>
-
-    <!-- Add / Remove session 2 button -->
-    <button class="add-session-btn" id="toggle-session2-btn" onclick="toggleSession2()">+ Add second session</button>
   </div>
 
   <!-- Work Type Buttons -->
   <div class="card">
-    <p class="card-label">Work type</p>
+    <p class="card-label">💼 Work type</p>
     <div class="type-grid">
-
-      <button class="type-btn health" onclick="addRecord('Healthcare', 450, 'health')">
+      <button class="type-btn health" id="healthBtn">
         <span class="type-icon">H</span>
         <span class="type-info">
           <span class="type-name">Healthcare</span>
@@ -571,7 +508,7 @@
         <span class="type-arrow">→</span>
       </button>
 
-      <button class="type-btn english" onclick="addRecord('English Customer', 350, 'english')">
+      <button class="type-btn english" id="englishBtn">
         <span class="type-icon">E</span>
         <span class="type-info">
           <span class="type-name">English Customer</span>
@@ -580,7 +517,7 @@
         <span class="type-arrow">→</span>
       </button>
 
-      <button class="type-btn arabic" onclick="addRecord('Arabic Customer', 250, 'arabic')">
+      <button class="type-btn arabic" id="arabicBtn">
         <span class="type-icon">A</span>
         <span class="type-info">
           <span class="type-name">Arabic Customer</span>
@@ -588,28 +525,27 @@
         </span>
         <span class="type-arrow">→</span>
       </button>
-
     </div>
   </div>
 
-  <!-- Records List -->
+  <!-- Records List & Total -->
   <div class="card">
     <div class="records-header">
-      <p class="card-label" style="margin:0;">Records</p>
+      <p class="card-label" style="margin:0;">📋 Records</p>
       <span class="records-count" id="record-count">0 entries</span>
     </div>
 
     <div class="records-list" id="records-list">
       <div class="empty-state" id="empty-state">
         <span class="empty-icon">📋</span>
-        No records yet.<br>Select a work type above to get started.
+        No records yet.<br>Add a project title, enter time, and select work type.
       </div>
     </div>
 
-    <button class="calc-btn" onclick="calcTotal()">Calculate Total</button>
+    <button class="calc-btn" id="calcTotalBtn">Calculate Total</button>
 
     <div class="total-bar" id="total-bar" style="display:none;">
-      <span class="total-label">Total earnings</span>
+      <span class="total-label">💰 Total earnings</span>
       <span class="total-amount" id="total-amount">0.00 EGP</span>
     </div>
   </div>
@@ -619,249 +555,263 @@
 <!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
-
 <script>
-  const STORAGE_KEY = 'work_records_v3';
+  // ─── Storage & Global State ──────────────────────────────────
+  const STORAGE_KEY = 'work_records_project_title_v1';
   let records = [];
-  let session2Visible = false;
 
-  // ─── Toggle second session ───────────────────────────────
-  function toggleSession2() {
-    session2Visible = !session2Visible;
-    const block = document.getElementById('session2-block');
-    const btn   = document.getElementById('toggle-session2-btn');
-    if (session2Visible) {
-      block.classList.add('visible');
-      btn.textContent = '− Remove second session';
-    } else {
-      block.classList.remove('visible');
-      btn.textContent = '+ Add second session';
-      document.getElementById('hours2-input').value = '';
-      document.getElementById('mins2-input').value  = '';
+  // DOM elements
+  const projectTitleInput = document.getElementById('project-title');
+  const hoursInput = document.getElementById('hours-input');
+  const minsInput = document.getElementById('mins-input');
+  const secsInput = document.getElementById('secs-input');
+
+  // ─── Helper: get total time in hours (decimal) including seconds ──
+  function getTimeComponents() {
+    let h = parseInt(hoursInput.value) || 0;
+    let m = parseInt(minsInput.value) || 0;
+    let s = parseInt(secsInput.value) || 0;
+    
+    h = Math.min(23, Math.max(0, h));
+    m = Math.min(59, Math.max(0, m));
+    s = Math.min(59, Math.max(0, s));
+    
+    return { hours: h, minutes: m, seconds: s };
+  }
+  
+  function getTimeInHours() {
+    const { hours, minutes, seconds } = getTimeComponents();
+    return hours + (minutes / 60) + (seconds / 3600);
+  }
+
+  function hasPositiveTime() {
+    const { hours, minutes, seconds } = getTimeComponents();
+    return (hours > 0 || minutes > 0 || seconds > 0);
+  }
+
+  // ─── Add Record (with project title + seconds) ─────────────────
+  function addRecord(type, ratePerHour, colorKey) {
+    // Validate project title (optional but recommended, allow empty but show fallback)
+    let projectTitle = projectTitleInput.value.trim();
+    if (projectTitle === "") {
+      projectTitle = "Untitled Project";
     }
-  }
-
-  // ─── Storage ─────────────────────────────────────────────
-  function loadRecords() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) records = JSON.parse(saved);
-    } catch (e) { records = []; }
+    
+    if (!hasPositiveTime()) {
+      showToast('⏳ Enter at least 1 second, minute or hour.');
+      return;
+    }
+    
+    const { hours, minutes, seconds } = getTimeComponents();
+    const totalHoursDecimal = hours + (minutes / 60) + (seconds / 3600);
+    const costRaw = totalHoursDecimal * ratePerHour;
+    const finalCost = parseFloat(costRaw.toFixed(2));
+    
+    const record = {
+      id: Date.now(),
+      projectTitle: projectTitle,
+      type: type,
+      colorKey: colorKey,
+      rate: ratePerHour,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+      cost: finalCost,
+      timestamp: new Date().toISOString()
+    };
+    
+    records.push(record);
+    saveRecords();
     renderAll();
+    
+    // Clear inputs after successful log (keep project title optional but clear for next entry? better to reset time fields but keep project title? UX: clear time, keep project title so user can log same project again)
+    hoursInput.value = '';
+    minsInput.value = '';
+    secsInput.value = '';
+    // we do NOT clear project title by default — user might log multiple entries for same project
+    // but we leave it as is for convenience, can be changed manually.
+    
+    // hide total bar after new entry
+    document.getElementById('total-bar').style.display = 'none';
+    
+    // readable duration string
+    let durationText = '';
+    if (hours > 0) durationText += `${hours}h `;
+    if (minutes > 0) durationText += `${minutes}m `;
+    if (seconds > 0) durationText += `${seconds}s`;
+    if (durationText === '') durationText = '0s';
+    
+    showToast(`✅ "${projectTitle}" · ${type} · ${durationText} → ${finalCost} EGP`);
   }
-  function saveRecords() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
-    catch (e) { console.warn('localStorage unavailable:', e); }
+  
+  // ─── Delete Record ───────────────────────────────────────────
+  function deleteRecord(id) {
+    records = records.filter(r => r.id !== id);
+    saveRecords();
+    renderAll();
+    document.getElementById('total-bar').style.display = 'none';
+    showToast('🗑️ Record deleted.');
   }
-
-  // ─── Format date ─────────────────────────────────────────
+  
+  // ─── Calculate Total ─────────────────────────────────────────
+  function calcTotal() {
+    if (records.length === 0) {
+      showToast('No records to calculate.');
+      return;
+    }
+    const total = records.reduce((sum, r) => sum + r.cost, 0);
+    document.getElementById('total-amount').textContent = total.toFixed(2) + ' EGP';
+    document.getElementById('total-bar').style.display = 'flex';
+  }
+  
+  // ─── Format timestamp ────────────────────────────────────────
   function formatDate(isoString) {
     const d = new Date(isoString);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const day = String(d.getDate()).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2, '0');
     const month = months[d.getMonth()];
     const year = d.getFullYear();
     let h = d.getHours();
     const ampm = h >= 12 ? 'PM' : 'AM';
     if (h > 12) h -= 12;
     if (h === 0) h = 12;
-    const min = String(d.getMinutes()).padStart(2,'0');
+    const min = String(d.getMinutes()).padStart(2, '0');
     return `${day} ${month} ${year} — ${h}:${min} ${ampm}`;
   }
-
-  // ─── Add a new record ────────────────────────────────────
-  function addRecord(type, rate, colorKey) {
-    const title = document.getElementById('project-title').value.trim();
-    const h1 = parseInt(document.getElementById('hours-input').value) || 0;
-    const m1 = parseInt(document.getElementById('mins-input').value)  || 0;
-    const h2 = session2Visible ? (parseInt(document.getElementById('hours2-input').value) || 0) : 0;
-    const m2 = session2Visible ? (parseInt(document.getElementById('mins2-input').value)  || 0) : 0;
-
-    if (h1 === 0 && m1 === 0 && h2 === 0 && m2 === 0) { showToast('Enter at least 1 minute.'); return; }
-    if (m1 > 59 || m2 > 59) { showToast('Minutes must be 0–59.'); return; }
-
-    const totalHours = h1 + (m1/60) + h2 + (m2/60);
-    const cost = parseFloat((totalHours * rate).toFixed(2));
-
-    const record = {
-      id:        Date.now(),
-      title:     title,
-      type:      type,
-      colorKey:  colorKey,
-      rate:      rate,
-      hours:     h1, minutes: m1,
-      hours2:    h2, minutes2: m2,
-      hasSession2: session2Visible && (h2 > 0 || m2 > 0),
-      cost:      cost,
-      timestamp: new Date().toISOString()
-    };
-
-    records.push(record);
-    saveRecords();
-    renderAll();
-
-    // Clear inputs
-    document.getElementById('project-title').value = '';
-    document.getElementById('hours-input').value = '';
-    document.getElementById('mins-input').value  = '';
-    if (session2Visible) toggleSession2();
-
-    document.getElementById('total-bar').style.display = 'none';
-    showToast('Record saved.');
-  }
-
-  // ─── Delete ──────────────────────────────────────────────
-  function deleteRecord(id) {
-    records = records.filter(r => r.id !== id);
-    saveRecords();
-    renderAll();
-    document.getElementById('total-bar').style.display = 'none';
-    showToast('Record deleted.');
-  }
-
-  // ─── Edit toggle ─────────────────────────────────────────
-  function toggleEdit(id) {
-    const el = document.getElementById('record-' + id);
-    const form = document.getElementById('edit-form-' + id);
-    if (!el || !form) return;
-    const isEditing = el.classList.contains('editing');
-    // Close all open edits first
-    document.querySelectorAll('.record-item.editing').forEach(item => {
-      item.classList.remove('editing');
-      item.querySelector('.edit-form').style.display = 'none';
-    });
-    if (!isEditing) {
-      el.classList.add('editing');
-      form.style.display = 'flex';
-    }
-  }
-
-  // ─── Save edit ───────────────────────────────────────────
-  function saveEdit(id) {
-    const r = records.find(r => r.id === id);
-    if (!r) return;
-
-    const newTitle = document.getElementById('edit-title-' + id).value.trim();
-    const newH1 = parseInt(document.getElementById('edit-h1-' + id).value) || 0;
-    const newM1 = parseInt(document.getElementById('edit-m1-' + id).value) || 0;
-    const newH2 = parseInt(document.getElementById('edit-h2-' + id).value) || 0;
-    const newM2 = parseInt(document.getElementById('edit-m2-' + id).value) || 0;
-
-    if (newH1 === 0 && newM1 === 0 && newH2 === 0 && newM2 === 0) { showToast('Enter at least 1 minute.'); return; }
-    if (newM1 > 59 || newM2 > 59) { showToast('Minutes must be 0–59.'); return; }
-
-    const totalHours = newH1 + (newM1/60) + newH2 + (newM2/60);
-    r.title    = newTitle;
-    r.hours    = newH1;
-    r.minutes  = newM1;
-    r.hours2   = newH2;
-    r.minutes2 = newM2;
-    r.hasSession2 = (newH2 > 0 || newM2 > 0);
-    r.cost     = parseFloat((totalHours * r.rate).toFixed(2));
-
-    saveRecords();
-    renderAll();
-    document.getElementById('total-bar').style.display = 'none';
-    showToast('Record updated.');
-  }
-
-  // ─── Calculate total ─────────────────────────────────────
-  function calcTotal() {
-    if (records.length === 0) { showToast('No records to calculate.'); return; }
-    const total = records.reduce((sum, r) => sum + r.cost, 0);
-    document.getElementById('total-amount').textContent = total.toFixed(2) + ' EGP';
-    document.getElementById('total-bar').style.display = 'flex';
-  }
-
-  // ─── Render ──────────────────────────────────────────────
+  
+  // ─── Render Records List (with project title visible) ─────────
   function renderAll() {
-    const list    = document.getElementById('records-list');
-    const countEl = document.getElementById('record-count');
-    countEl.textContent = records.length + (records.length === 1 ? ' entry' : ' entries');
-
+    const listContainer = document.getElementById('records-list');
+    const countSpan = document.getElementById('record-count');
+    countSpan.textContent = records.length + (records.length === 1 ? ' entry' : ' entries');
+    
     if (records.length === 0) {
-      list.innerHTML = `
+      listContainer.innerHTML = `
         <div class="empty-state">
           <span class="empty-icon">📋</span>
-          No records yet.<br>Select a work type above to get started.
+          No records yet.<br>Add a project title, enter time, and select work type.
         </div>`;
       return;
     }
-
-    list.innerHTML = records.slice().reverse().map(r => {
-      const titleHtml = r.title
-        ? `<p class="record-title-text">${escHtml(r.title)}</p>`
-        : '';
-      const session2Meta = r.hasSession2
-        ? ` &nbsp;+&nbsp; ${r.hours2}h ${r.minutes2}m`
-        : '';
-
+    
+    // show latest first
+    listContainer.innerHTML = records.slice().reverse().map(r => {
+      let durationParts = [];
+      if (r.hours > 0) durationParts.push(`${r.hours}h`);
+      if (r.minutes > 0) durationParts.push(`${r.minutes}m`);
+      if (r.seconds > 0) durationParts.push(`${r.seconds}s`);
+      if (durationParts.length === 0) durationParts.push('0s');
+      const durationStr = durationParts.join(' ');
+      
+      // escape project title to avoid XSS
+      const safeProject = escapeHtml(r.projectTitle);
+      
       return `
-      <div class="record-item" id="record-${r.id}">
-        <span class="record-dot ${r.colorKey}"></span>
-        <div class="record-body">
-          <div class="record-top">
-            <span class="record-type">${r.type}</span>
-            <span class="record-cost">${r.cost.toFixed(2)} EGP</span>
+        <div class="record-item">
+          <span class="record-dot ${r.colorKey}"></span>
+          <div class="record-body">
+            <div class="record-top">
+              <span class="record-type">${r.type}</span>
+              <span class="record-cost">${r.cost.toFixed(2)} EGP</span>
+            </div>
+            <div class="record-project">📁 ${safeProject}</div>
+            <p class="record-meta">⏱️ ${durationStr} &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
           </div>
-          ${titleHtml}
-          <p class="record-meta">${r.hours}h ${r.minutes}m${session2Meta} &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
-
-          <!-- Inline edit form -->
-          <div class="edit-form" id="edit-form-${r.id}" style="display:none;">
-            <input type="text" id="edit-title-${r.id}" value="${escHtml(r.title || '')}" placeholder="Project title (optional)" />
-            <div class="edit-session-sep">Session 1</div>
-            <div class="edit-time-row">
-              <div>
-                <div class="ef-label">Hours</div>
-                <input type="number" id="edit-h1-${r.id}" value="${r.hours}" min="0" max="23" placeholder="0" />
-              </div>
-              <div>
-                <div class="ef-label">Minutes</div>
-                <input type="number" id="edit-m1-${r.id}" value="${r.minutes}" min="0" max="59" placeholder="0" />
-              </div>
-            </div>
-            <div class="edit-session-sep">Session 2 (optional)</div>
-            <div class="edit-time-row">
-              <div>
-                <div class="ef-label">Hours</div>
-                <input type="number" id="edit-h2-${r.id}" value="${r.hours2 || 0}" min="0" max="23" placeholder="0" />
-              </div>
-              <div>
-                <div class="ef-label">Minutes</div>
-                <input type="number" id="edit-m2-${r.id}" value="${r.minutes2 || 0}" min="0" max="59" placeholder="0" />
-              </div>
-            </div>
-            <div class="edit-actions">
-              <button class="save-btn" onclick="saveEdit(${r.id})">Save changes</button>
-              <button class="cancel-btn" onclick="toggleEdit(${r.id})">Cancel</button>
-            </div>
-          </div>
-        </div>
-        <div class="record-actions">
-          <button class="edit-btn" onclick="toggleEdit(${r.id})" title="Edit record">✎</button>
           <button class="del-btn" onclick="deleteRecord(${r.id})" title="Delete record">✕</button>
         </div>
-      </div>`;
+      `;
     }).join('');
   }
-
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  
+  // simple escape helper
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
   }
-
-  // ─── Toast ───────────────────────────────────────────────
+  
+  // ─── LocalStorage ────────────────────────────────────────────
+  function saveRecords() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch(e) { console.warn(e); }
+  }
+  
+  function loadRecords() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) records = JSON.parse(saved);
+    } catch(e) { records = []; }
+    renderAll();
+  }
+  
+  // ─── Toast Notification ──────────────────────────────────────
   let toastTimer = null;
   function showToast(msg) {
     const toast = document.getElementById('toast');
     toast.textContent = msg;
     toast.classList.add('show');
     if (toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
   }
-
-  // ─── Init ────────────────────────────────────────────────
-  loadRecords();
+  
+  // ─── Input validations & clamping ────────────────────────────
+  function setupInputValidations() {
+    const clampField = (input, max, min = 0) => {
+      input.addEventListener('change', () => {
+        let val = parseInt(input.value);
+        if (isNaN(val)) input.value = 0;
+        else if (val > max) input.value = max;
+        else if (val < min) input.value = min;
+      });
+      input.addEventListener('input', () => {
+        let val = parseInt(input.value);
+        if (!isNaN(val)) {
+          if (val > max) input.value = max;
+          if (val < min) input.value = min;
+        }
+      });
+    };
+    clampField(hoursInput, 23, 0);
+    clampField(minsInput, 59, 0);
+    clampField(secsInput, 59, 0);
+  }
+  
+  // ─── Event binding ───────────────────────────────────────────
+  function bindWorkButtons() {
+    document.getElementById('healthBtn').addEventListener('click', () => addRecord('Healthcare', 450, 'health'));
+    document.getElementById('englishBtn').addEventListener('click', () => addRecord('English Customer', 350, 'english'));
+    document.getElementById('arabicBtn').addEventListener('click', () => addRecord('Arabic Customer', 250, 'arabic'));
+    document.getElementById('calcTotalBtn').addEventListener('click', calcTotal);
+  }
+  
+  function bindInputFocus() {
+    const inputs = [hoursInput, minsInput, secsInput, projectTitleInput];
+    inputs.forEach(inp => {
+      if (inp) inp.addEventListener('focus', () => {
+        document.getElementById('total-bar').style.display = 'none';
+      });
+    });
+  }
+  
+  // ─── Initialization ──────────────────────────────────────────
+  function init() {
+    loadRecords();
+    bindWorkButtons();
+    setupInputValidations();
+    bindInputFocus();
+    // set default zero placeholders for time
+    if (hoursInput.value === '') hoursInput.value = 0;
+    if (minsInput.value === '') minsInput.value = 0;
+    if (secsInput.value === '') secsInput.value = 0;
+  }
+  
+  init();
 </script>
 
 </body>
