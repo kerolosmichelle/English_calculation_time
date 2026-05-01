@@ -21,7 +21,6 @@
       --text-muted:  #8A8A86;
       --text-faint:  #4A4A48;
 
-      /* Work type accents — vivid on dark */
       --health-bg:   #0D3528;
       --health-fg:   #5DD4A8;
       --health-dot:  #3DBF8C;
@@ -36,6 +35,9 @@
 
       --danger-bg:   #3A1212;
       --danger-fg:   #F08080;
+
+      --edit-bg:     #1A2A12;
+      --edit-fg:     #8FD46A;
 
       --radius-sm: 8px;
       --radius-md: 12px;
@@ -57,16 +59,13 @@
       line-height: 1.5;
     }
 
-    /* ─── Layout ───────────────────────────────────────────── */
     .app {
       max-width: 640px;
       margin: 0 auto;
     }
 
     /* ─── Header ───────────────────────────────────────────── */
-    .header {
-      margin-bottom: 2rem;
-    }
+    .header { margin-bottom: 2rem; }
     .header-eyebrow {
       font-family: var(--font-mono);
       font-size: 11px;
@@ -75,17 +74,8 @@
       color: var(--text-faint);
       margin-bottom: 6px;
     }
-    .header-title {
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.2;
-    }
-    .header-sub {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
+    .header-title { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1.2; }
+    .header-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
 
     /* ─── Card ─────────────────────────────────────────────── */
     .card {
@@ -105,66 +95,54 @@
       margin-bottom: 12px;
     }
 
-    /* ─── Work Type Buttons ────────────────────────────────── */
-    .type-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
+    /* ─── Project Title Input ──────────────────────────────── */
+    .title-field { margin-bottom: 0; }
+    .title-field label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
     }
-
-    .type-btn {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: transparent;
-      cursor: pointer;
-      font-family: var(--font-body);
-      text-align: left;
-      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    .title-field input {
       width: 100%;
-    }
-    .type-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-md); }
-    .type-btn:active { transform: scale(0.99); }
-
-    .type-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .type-btn.health  .type-icon { background: var(--health-bg);  color: var(--health-fg); }
-    .type-btn.english .type-icon { background: var(--english-bg); color: var(--english-fg); }
-    .type-btn.arabic  .type-icon { background: var(--arabic-bg);  color: var(--arabic-fg); }
-
-    .type-info { flex: 1; }
-    .type-name {
-      font-size: 14px;
+      padding: 10px 14px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: #161616;
+      font-size: 15px;
       font-weight: 500;
       color: var(--text);
-      display: block;
+      outline: none;
+      font-family: var(--font-body);
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .type-rate {
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-muted);
-      display: block;
-      margin-top: 1px;
-    }
-
-    .type-arrow {
-      font-size: 16px;
-      color: var(--text-faint);
+    .title-field input::placeholder { color: var(--text-faint); }
+    .title-field input:focus {
+      border-color: var(--border-md);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+      background: var(--surface);
     }
 
     /* ─── Time Inputs ──────────────────────────────────────── */
+    .session-block { margin-top: 14px; }
+    .session-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .session-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
     .time-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -211,6 +189,65 @@
       pointer-events: none;
     }
 
+    /* Second session toggle */
+    .add-session-btn {
+      margin-top: 10px;
+      background: none;
+      border: 1px dashed var(--border-md);
+      border-radius: var(--radius-sm);
+      color: var(--text-faint);
+      font-family: var(--font-body);
+      font-size: 13px;
+      padding: 8px 14px;
+      cursor: pointer;
+      width: 100%;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .add-session-btn:hover { color: var(--text-muted); border-color: var(--border-md); }
+
+    #session2-block { display: none; }
+    #session2-block.visible { display: block; }
+
+    /* ─── Work Type Buttons ────────────────────────────────── */
+    .type-grid { display: flex; flex-direction: column; gap: 8px; }
+
+    .type-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: transparent;
+      cursor: pointer;
+      font-family: var(--font-body);
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      width: 100%;
+    }
+    .type-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-md); }
+    .type-btn:active { transform: scale(0.99); }
+
+    .type-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .type-btn.health  .type-icon { background: var(--health-bg);  color: var(--health-fg); }
+    .type-btn.english .type-icon { background: var(--english-bg); color: var(--english-fg); }
+    .type-btn.arabic  .type-icon { background: var(--arabic-bg);  color: var(--arabic-fg); }
+
+    .type-info { flex: 1; }
+    .type-name { font-size: 14px; font-weight: 500; color: var(--text); display: block; }
+    .type-rate { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); display: block; margin-top: 1px; }
+    .type-arrow { font-size: 16px; color: var(--text-faint); }
+
     /* ─── Records ──────────────────────────────────────────── */
     .records-header {
       display: flex;
@@ -218,16 +255,8 @@
       justify-content: space-between;
       margin-bottom: 12px;
     }
-    .records-count {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-faint);
-    }
-    .records-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+    .records-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
+    .records-list { display: flex; flex-direction: column; gap: 6px; }
     .empty-state {
       text-align: center;
       padding: 2rem 1rem;
@@ -236,12 +265,7 @@
       border: 1px dashed var(--border);
       border-radius: var(--radius-sm);
     }
-    .empty-icon {
-      font-size: 28px;
-      display: block;
-      margin-bottom: 8px;
-      opacity: 0.5;
-    }
+    .empty-icon { font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.5; }
 
     /* ─── Record Item ──────────────────────────────────────── */
     .record-item {
@@ -253,6 +277,10 @@
       border-radius: var(--radius-sm);
       background: #171717;
       animation: slideIn 0.2s ease;
+    }
+    .record-item.editing {
+      border-color: var(--border-md);
+      background: #1a1a1a;
     }
     @keyframes slideIn {
       from { opacity: 0; transform: translateY(-6px); }
@@ -276,10 +304,12 @@
       align-items: baseline;
       gap: 8px;
     }
-    .record-type {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text);
+    .record-type { font-size: 14px; font-weight: 500; color: var(--text); }
+    .record-title-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 1px;
     }
     .record-cost {
       font-family: var(--font-mono);
@@ -295,7 +325,14 @@
       font-family: var(--font-mono);
     }
 
-    .del-btn {
+    /* ─── Record action buttons ────────────────────────────── */
+    .record-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .del-btn, .edit-btn {
       background: none;
       border: none;
       cursor: pointer;
@@ -305,13 +342,94 @@
       align-items: center;
       justify-content: center;
       border-radius: 6px;
-      color: var(--text-faint);
       font-size: 13px;
       flex-shrink: 0;
       transition: background 0.15s, color 0.15s;
-      margin-top: 1px;
     }
+    .del-btn { color: var(--text-faint); }
     .del-btn:hover { background: var(--danger-bg); color: var(--danger-fg); }
+    .edit-btn { color: var(--text-faint); }
+    .edit-btn:hover { background: var(--edit-bg); color: var(--edit-fg); }
+
+    /* ─── Inline Edit Form ─────────────────────────────────── */
+    .edit-form {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .edit-form input[type="text"],
+    .edit-form input[type="number"] {
+      background: #161616;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -moz-appearance: textfield;
+      width: 100%;
+    }
+    .edit-form input::-webkit-inner-spin-button,
+    .edit-form input::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .edit-form input:focus {
+      border-color: var(--border-md);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.05);
+    }
+    .edit-form input::placeholder { color: var(--text-faint); }
+    .edit-time-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .edit-time-row .ef-label {
+      font-size: 11px;
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+      margin-bottom: 4px;
+    }
+    .edit-session-sep {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-top: 2px;
+    }
+    .edit-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .save-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--edit-fg);
+      background: var(--edit-bg);
+      color: var(--edit-fg);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .save-btn:hover { opacity: 0.85; }
+    .cancel-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-md);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cancel-btn:hover { background: rgba(255,255,255,0.04); }
 
     /* ─── Total ────────────────────────────────────────────── */
     .calc-btn {
@@ -328,11 +446,7 @@
       cursor: pointer;
       transition: background 0.15s, color 0.15s, border-color 0.15s;
     }
-    .calc-btn:hover {
-      background: var(--text);
-      color: #0F0F0F;
-      border-color: var(--text);
-    }
+    .calc-btn:hover { background: var(--text); color: #0F0F0F; border-color: var(--text); }
 
     .total-bar {
       display: flex;
@@ -345,20 +459,9 @@
       background: rgba(255,255,255,0.06);
       animation: fadeIn 0.2s ease;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-    .total-label {
-      font-size: 13px;
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
-    .total-amount {
-      font-family: var(--font-mono);
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--text);
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .total-label { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
+    .total-amount { font-family: var(--font-mono); font-size: 20px; font-weight: 500; color: var(--text); }
 
     /* ─── Toast ────────────────────────────────────────────── */
     .toast {
@@ -367,7 +470,7 @@
       left: 50%;
       transform: translateX(-50%) translateY(8px);
       background: var(--text);
-      color: #fff;
+      color: #111;
       font-size: 13px;
       font-family: var(--font-mono);
       padding: 9px 18px;
@@ -378,10 +481,7 @@
       white-space: nowrap;
       z-index: 999;
     }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ─── Responsive ───────────────────────────────────────── */
     @media (max-width: 480px) {
@@ -401,30 +501,63 @@
     <p class="header-sub">Pick a work type, enter your time, and log the session.</p>
   </div>
 
-
-
   <!-- Time Input -->
   <div class="card">
-    <p class="card-label">Time worked</p>
-    <div class="time-row">
-      <div class="field">
-        <label for="hours-input">Hours</label>
-        <div class="field-inner">
-          <input type="number" id="hours-input" min="0" max="23" placeholder="0" />
-          <span class="field-unit">hr</span>
+    <p class="card-label">Session details</p>
+
+    <!-- Project Title -->
+    <div class="title-field">
+      <label for="project-title">Project title <span style="color:var(--text-faint);font-weight:400;">(optional)</span></label>
+      <input type="text" id="project-title" placeholder="e.g. Website redesign, Client report…" autocomplete="off" />
+    </div>
+
+    <!-- Session 1 -->
+    <div class="session-block">
+      <div class="session-label">Session 1</div>
+      <div class="time-row">
+        <div class="field">
+          <label for="hours-input">Hours</label>
+          <div class="field-inner">
+            <input type="number" id="hours-input" min="0" max="23" placeholder="0" />
+            <span class="field-unit">hr</span>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <label for="mins-input">Minutes</label>
-        <div class="field-inner">
-          <input type="number" id="mins-input" min="0" max="59" placeholder="0" />
-          <span class="field-unit">min</span>
+        <div class="field">
+          <label for="mins-input">Minutes</label>
+          <div class="field-inner">
+            <input type="number" id="mins-input" min="0" max="59" placeholder="0" />
+            <span class="field-unit">min</span>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Session 2 (hidden by default) -->
+    <div class="session-block" id="session2-block">
+      <div class="session-label">Session 2</div>
+      <div class="time-row">
+        <div class="field">
+          <label for="hours2-input">Hours</label>
+          <div class="field-inner">
+            <input type="number" id="hours2-input" min="0" max="23" placeholder="0" />
+            <span class="field-unit">hr</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="mins2-input">Minutes</label>
+          <div class="field-inner">
+            <input type="number" id="mins2-input" min="0" max="59" placeholder="0" />
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add / Remove session 2 button -->
+    <button class="add-session-btn" id="toggle-session2-btn" onclick="toggleSession2()">+ Add second session</button>
   </div>
 
-  <!-- Work Type Buttons (now at bottom) -->
+  <!-- Work Type Buttons -->
   <div class="card">
     <p class="card-label">Work type</p>
     <div class="type-grid">
@@ -456,7 +589,10 @@
         <span class="type-arrow">→</span>
       </button>
 
-  <!-- Records List (now on top) -->
+    </div>
+  </div>
+
+  <!-- Records List -->
   <div class="card">
     <div class="records-header">
       <p class="card-label" style="margin:0;">Records</p>
@@ -466,7 +602,7 @@
     <div class="records-list" id="records-list">
       <div class="empty-state" id="empty-state">
         <span class="empty-icon">📋</span>
-        No records yet.<br>Select a work type below to get started.
+        No records yet.<br>Select a work type above to get started.
       </div>
     </div>
 
@@ -477,9 +613,6 @@
       <span class="total-amount" id="total-amount">0.00 EGP</span>
     </div>
   </div>
-    </div>
-
-</div>
 
 </div>
 
@@ -488,77 +621,77 @@
 
 
 <script>
-  // ─── Storage Key ────────────────────────────────────────
-  const STORAGE_KEY = 'work_records_v2';
-
-  // ─── Records Array ──────────────────────────────────────
+  const STORAGE_KEY = 'work_records_v3';
   let records = [];
+  let session2Visible = false;
 
-  // ─── Load records from localStorage on page load ────────
+  // ─── Toggle second session ───────────────────────────────
+  function toggleSession2() {
+    session2Visible = !session2Visible;
+    const block = document.getElementById('session2-block');
+    const btn   = document.getElementById('toggle-session2-btn');
+    if (session2Visible) {
+      block.classList.add('visible');
+      btn.textContent = '− Remove second session';
+    } else {
+      block.classList.remove('visible');
+      btn.textContent = '+ Add second session';
+      document.getElementById('hours2-input').value = '';
+      document.getElementById('mins2-input').value  = '';
+    }
+  }
+
+  // ─── Storage ─────────────────────────────────────────────
   function loadRecords() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) records = JSON.parse(saved);
-    } catch (e) {
-      records = [];
-    }
+    } catch (e) { records = []; }
     renderAll();
   }
-
-  // ─── Save records to localStorage ───────────────────────
   function saveRecords() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    } catch (e) {
-      console.warn('localStorage unavailable:', e);
-    }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
+    catch (e) { console.warn('localStorage unavailable:', e); }
   }
 
-  // ─── Format date: "08 Apr 2026 — 03:25 PM" ──────────────
+  // ─── Format date ─────────────────────────────────────────
   function formatDate(isoString) {
     const d = new Date(isoString);
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const day   = String(d.getDate()).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2,'0');
     const month = months[d.getMonth()];
-    const year  = d.getFullYear();
-    let   h     = d.getHours();
-    const ampm  = h >= 12 ? 'PM' : 'AM';
+    const year = d.getFullYear();
+    let h = d.getHours();
+    const ampm = h >= 12 ? 'PM' : 'AM';
     if (h > 12) h -= 12;
     if (h === 0) h = 12;
-    const min = String(d.getMinutes()).padStart(2, '0');
+    const min = String(d.getMinutes()).padStart(2,'0');
     return `${day} ${month} ${year} — ${h}:${min} ${ampm}`;
   }
 
   // ─── Add a new record ────────────────────────────────────
   function addRecord(type, rate, colorKey) {
-    const hoursEl = document.getElementById('hours-input');
-    const minsEl  = document.getElementById('mins-input');
+    const title = document.getElementById('project-title').value.trim();
+    const h1 = parseInt(document.getElementById('hours-input').value) || 0;
+    const m1 = parseInt(document.getElementById('mins-input').value)  || 0;
+    const h2 = session2Visible ? (parseInt(document.getElementById('hours2-input').value) || 0) : 0;
+    const m2 = session2Visible ? (parseInt(document.getElementById('mins2-input').value)  || 0) : 0;
 
-    const h = parseInt(hoursEl.value) || 0;
-    const m = parseInt(minsEl.value)  || 0;
+    if (h1 === 0 && m1 === 0 && h2 === 0 && m2 === 0) { showToast('Enter at least 1 minute.'); return; }
+    if (m1 > 59 || m2 > 59) { showToast('Minutes must be 0–59.'); return; }
 
-    // Validation
-    if (h === 0 && m === 0) {
-      showToast('Enter at least 1 minute.');
-      return;
-    }
-    if (m > 59) {
-      showToast('Minutes must be between 0 and 59.');
-      return;
-    }
-
-    // Calculate cost
-    const totalHours = h + (m / 60);
+    const totalHours = h1 + (m1/60) + h2 + (m2/60);
     const cost = parseFloat((totalHours * rate).toFixed(2));
 
-    // Build record object
     const record = {
       id:        Date.now(),
+      title:     title,
       type:      type,
       colorKey:  colorKey,
       rate:      rate,
-      hours:     h,
-      minutes:   m,
+      hours:     h1, minutes: m1,
+      hours2:    h2, minutes2: m2,
+      hasSession2: session2Visible && (h2 > 0 || m2 > 0),
       cost:      cost,
       timestamp: new Date().toISOString()
     };
@@ -568,16 +701,16 @@
     renderAll();
 
     // Clear inputs
-    hoursEl.value = '';
-    minsEl.value  = '';
+    document.getElementById('project-title').value = '';
+    document.getElementById('hours-input').value = '';
+    document.getElementById('mins-input').value  = '';
+    if (session2Visible) toggleSession2();
 
-    // Hide total bar (stale after new entry)
     document.getElementById('total-bar').style.display = 'none';
-
     showToast('Record saved.');
   }
 
-  // ─── Delete a record by id ───────────────────────────────
+  // ─── Delete ──────────────────────────────────────────────
   function deleteRecord(id) {
     records = records.filter(r => r.id !== id);
     saveRecords();
@@ -586,52 +719,138 @@
     showToast('Record deleted.');
   }
 
-  // ─── Calculate and display total ────────────────────────
-  function calcTotal() {
-    if (records.length === 0) {
-      showToast('No records to calculate.');
-      return;
+  // ─── Edit toggle ─────────────────────────────────────────
+  function toggleEdit(id) {
+    const el = document.getElementById('record-' + id);
+    const form = document.getElementById('edit-form-' + id);
+    if (!el || !form) return;
+    const isEditing = el.classList.contains('editing');
+    // Close all open edits first
+    document.querySelectorAll('.record-item.editing').forEach(item => {
+      item.classList.remove('editing');
+      item.querySelector('.edit-form').style.display = 'none';
+    });
+    if (!isEditing) {
+      el.classList.add('editing');
+      form.style.display = 'flex';
     }
+  }
+
+  // ─── Save edit ───────────────────────────────────────────
+  function saveEdit(id) {
+    const r = records.find(r => r.id === id);
+    if (!r) return;
+
+    const newTitle = document.getElementById('edit-title-' + id).value.trim();
+    const newH1 = parseInt(document.getElementById('edit-h1-' + id).value) || 0;
+    const newM1 = parseInt(document.getElementById('edit-m1-' + id).value) || 0;
+    const newH2 = parseInt(document.getElementById('edit-h2-' + id).value) || 0;
+    const newM2 = parseInt(document.getElementById('edit-m2-' + id).value) || 0;
+
+    if (newH1 === 0 && newM1 === 0 && newH2 === 0 && newM2 === 0) { showToast('Enter at least 1 minute.'); return; }
+    if (newM1 > 59 || newM2 > 59) { showToast('Minutes must be 0–59.'); return; }
+
+    const totalHours = newH1 + (newM1/60) + newH2 + (newM2/60);
+    r.title    = newTitle;
+    r.hours    = newH1;
+    r.minutes  = newM1;
+    r.hours2   = newH2;
+    r.minutes2 = newM2;
+    r.hasSession2 = (newH2 > 0 || newM2 > 0);
+    r.cost     = parseFloat((totalHours * r.rate).toFixed(2));
+
+    saveRecords();
+    renderAll();
+    document.getElementById('total-bar').style.display = 'none';
+    showToast('Record updated.');
+  }
+
+  // ─── Calculate total ─────────────────────────────────────
+  function calcTotal() {
+    if (records.length === 0) { showToast('No records to calculate.'); return; }
     const total = records.reduce((sum, r) => sum + r.cost, 0);
     document.getElementById('total-amount').textContent = total.toFixed(2) + ' EGP';
     document.getElementById('total-bar').style.display = 'flex';
   }
 
-  // ─── Render the full records list ───────────────────────
+  // ─── Render ──────────────────────────────────────────────
   function renderAll() {
-    const list     = document.getElementById('records-list');
-    const countEl  = document.getElementById('record-count');
-
-    // Update entry count
+    const list    = document.getElementById('records-list');
+    const countEl = document.getElementById('record-count');
     countEl.textContent = records.length + (records.length === 1 ? ' entry' : ' entries');
 
-    // Empty state
     if (records.length === 0) {
       list.innerHTML = `
-        <div class="empty-state" id="empty-state">
+        <div class="empty-state">
           <span class="empty-icon">📋</span>
           No records yet.<br>Select a work type above to get started.
         </div>`;
       return;
     }
 
-    // Render records newest-first
-    list.innerHTML = records.slice().reverse().map(r => `
-      <div class="record-item">
+    list.innerHTML = records.slice().reverse().map(r => {
+      const titleHtml = r.title
+        ? `<p class="record-title-text">${escHtml(r.title)}</p>`
+        : '';
+      const session2Meta = r.hasSession2
+        ? ` &nbsp;+&nbsp; ${r.hours2}h ${r.minutes2}m`
+        : '';
+
+      return `
+      <div class="record-item" id="record-${r.id}">
         <span class="record-dot ${r.colorKey}"></span>
         <div class="record-body">
           <div class="record-top">
             <span class="record-type">${r.type}</span>
             <span class="record-cost">${r.cost.toFixed(2)} EGP</span>
           </div>
-          <p class="record-meta">${r.hours}h ${r.minutes}m &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
+          ${titleHtml}
+          <p class="record-meta">${r.hours}h ${r.minutes}m${session2Meta} &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
+
+          <!-- Inline edit form -->
+          <div class="edit-form" id="edit-form-${r.id}" style="display:none;">
+            <input type="text" id="edit-title-${r.id}" value="${escHtml(r.title || '')}" placeholder="Project title (optional)" />
+            <div class="edit-session-sep">Session 1</div>
+            <div class="edit-time-row">
+              <div>
+                <div class="ef-label">Hours</div>
+                <input type="number" id="edit-h1-${r.id}" value="${r.hours}" min="0" max="23" placeholder="0" />
+              </div>
+              <div>
+                <div class="ef-label">Minutes</div>
+                <input type="number" id="edit-m1-${r.id}" value="${r.minutes}" min="0" max="59" placeholder="0" />
+              </div>
+            </div>
+            <div class="edit-session-sep">Session 2 (optional)</div>
+            <div class="edit-time-row">
+              <div>
+                <div class="ef-label">Hours</div>
+                <input type="number" id="edit-h2-${r.id}" value="${r.hours2 || 0}" min="0" max="23" placeholder="0" />
+              </div>
+              <div>
+                <div class="ef-label">Minutes</div>
+                <input type="number" id="edit-m2-${r.id}" value="${r.minutes2 || 0}" min="0" max="59" placeholder="0" />
+              </div>
+            </div>
+            <div class="edit-actions">
+              <button class="save-btn" onclick="saveEdit(${r.id})">Save changes</button>
+              <button class="cancel-btn" onclick="toggleEdit(${r.id})">Cancel</button>
+            </div>
+          </div>
         </div>
-        <button class="del-btn" onclick="deleteRecord(${r.id})" title="Delete record">✕</button>
-      </div>
-    `).join('');
+        <div class="record-actions">
+          <button class="edit-btn" onclick="toggleEdit(${r.id})" title="Edit record">✎</button>
+          <button class="del-btn" onclick="deleteRecord(${r.id})" title="Delete record">✕</button>
+        </div>
+      </div>`;
+    }).join('');
   }
 
-  // ─── Toast notification ──────────────────────────────────
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ─── Toast ───────────────────────────────────────────────
   let toastTimer = null;
   function showToast(msg) {
     const toast = document.getElementById('toast');
