@@ -1,675 +1,745 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Work Records — Cross‑Device Cloud Sync</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Monthly Work Ledger · Group by Month</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ─── Reset & Base (same modern dark theme) ────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     :root {
-      --bg:          #111111;
-      --surface:     #1E1E1E;
-      --border:      rgba(255,255,255,0.09);
-      --border-md:   rgba(255,255,255,0.18);
-      --text:        #F0F0EE;
-      --text-muted:  #8A8A86;
-      --text-faint:  #4A4A48;
-      --health-bg:   #0D3528;
-      --health-fg:   #5DD4A8;
-      --health-dot:  #3DBF8C;
-      --english-bg:  #0D2140;
-      --english-fg:  #70B8F5;
-      --english-dot: #4A9EE8;
-      --arabic-bg:   #1A1240;
-      --arabic-fg:   #B0A8F8;
-      --arabic-dot:  #8880E8;
-      --danger-bg:   #3A1212;
-      --danger-fg:   #F08080;
-      --radius-sm: 8px;
+      --bg: #0C0C12;
+      --surface: #15151F;
+      --surface-elevated: #1D1D2A;
+      --border: rgba(255,255,255,0.06);
+      --border-md: rgba(255,255,255,0.12);
+      --text: #F1F1EF;
+      --text-muted: #A8A8B2;
+      --text-faint: #63636F;
+      --accent: #5D7AF2;
+      --health-bg: #0D3528;
+      --health-fg: #5DD4A8;
+      --english-bg: #0D2140;
+      --english-fg: #70B8F5;
+      --arabic-bg: #1A1240;
+      --arabic-fg: #B0A8F8;
+      --danger: #F97373;
+      --radius-lg: 18px;
       --radius-md: 12px;
-      --radius-lg: 16px;
-      --font-body: 'DM Sans', sans-serif;
-      --font-mono: 'DM Mono', monospace;
-      --shadow-card: 0 2px 6px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.4);
     }
 
     body {
-      font-family: var(--font-body);
       background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
       color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1rem 4rem;
-      font-size: 15px;
-      line-height: 1.5;
+      padding: 1.6rem 1rem 3rem;
+      line-height: 1.45;
     }
 
     .app {
-      max-width: 680px;
+      max-width: 960px;
       margin: 0 auto;
     }
 
-    .header { margin-bottom: 2rem; }
-    .header-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      margin-bottom: 6px;
+    /* header */
+    .hero {
+      margin-bottom: 2rem;
     }
-    .header-title { font-size: 26px; font-weight: 600; }
-    .header-sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .hero-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      background: rgba(93,122,242,0.18);
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 40px;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-top: 8px;
+      letter-spacing: -0.3px;
+    }
+    .sub {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 5px;
+    }
 
+    /* card style */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius-lg);
       padding: 1.25rem;
-      box-shadow: var(--shadow-card);
-      margin-bottom: 1rem;
+      margin-bottom: 1.3rem;
+      backdrop-filter: blur(2px);
     }
-    .card-label {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: monospace;
+      font-size: 12px;
       color: var(--text-faint);
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      letter-spacing: 0.3px;
     }
 
-    /* work buttons */
-    .type-grid { display: flex; flex-direction: column; gap: 8px; }
-    .type-btn {
+    /* input row */
+    .flex-inputs {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      background: transparent;
-      cursor: pointer;
-      font-family: var(--font-body);
-      text-align: left;
-      transition: border-color 0.15s, background 0.15s, transform 0.1s;
-      width: 100%;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 18px;
     }
-    .type-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--border-md); }
-    .type-btn:active { transform: scale(0.99); }
-    .type-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 14px;
+    .project-group {
+      flex: 2;
+      min-width: 180px;
     }
-    .type-btn.health  .type-icon { background: var(--health-bg); color: var(--health-fg); }
-    .type-btn.english .type-icon { background: var(--english-bg); color: var(--english-fg); }
-    .type-btn.arabic  .type-icon { background: var(--arabic-bg); color: var(--arabic-fg); }
-    .type-info { flex: 1; }
-    .type-name { font-weight: 500; }
-    .type-rate { font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-    .type-arrow { color: var(--text-faint); }
-
-    .time-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-    .field-inner { position: relative; display: flex; align-items: center; }
-    .field input {
-      width: 100%;
-      padding: 10px 44px 10px 14px;
-      border: 1px solid var(--border-md);
-      border-radius: var(--radius-sm);
-      background: #161616;
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--text);
-      outline: none;
-      -moz-appearance: textfield;
-    }
-    .field input:focus { border-color: var(--border-md); box-shadow: 0 0 0 3px rgba(255,255,255,0.05); background: var(--surface); }
-    .field-unit { position: absolute; right: 12px; font-size: 11px; font-family: var(--font-mono); color: var(--text-faint); pointer-events: none; }
-
-    .records-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .records-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); }
-    .records-list { display: flex; flex-direction: column; gap: 6px; max-height: 360px; overflow-y: auto; padding-right: 2px; }
-    .empty-state { text-align: center; padding: 2rem 1rem; color: var(--text-faint); font-size: 14px; border: 1px dashed var(--border); border-radius: var(--radius-sm); }
-    .empty-icon { font-size: 28px; display: block; margin-bottom: 8px; opacity: 0.5; }
-    .record-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 11px 13px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: #171717;
-      animation: slideIn 0.2s ease;
-    }
-    @keyframes slideIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
-    .record-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-    .record-dot.health  { background: var(--health-dot); }
-    .record-dot.english { background: var(--english-dot); }
-    .record-dot.arabic  { background: var(--arabic-dot); }
-    .record-body { flex: 1; min-width: 0; }
-    .record-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-    .record-type { font-weight: 500; }
-    .record-cost { font-family: var(--font-mono); font-weight: 500; white-space: nowrap; }
-    .record-meta { font-size: 12px; color: var(--text-faint); font-family: var(--font-mono); margin-top: 2px; }
-    .del-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      color: var(--text-faint);
-      font-size: 13px;
-      transition: background 0.15s, color 0.15s;
-    }
-    .del-btn:hover { background: var(--danger-bg); color: var(--danger-fg); }
-
-    .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; margin-bottom: 12px; }
-    .action-btn {
-      flex: 1 1 auto;
-      padding: 10px 14px;
-      border: 1px solid var(--border-md);
-      border-radius: var(--radius-sm);
-      background: transparent;
-      font-family: var(--font-body);
-      font-size: 13px;
+    .project-group label, .time-field label {
+      font-size: 12px;
       font-weight: 500;
       color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      display: block;
+      margin-bottom: 6px;
     }
-    .action-btn:hover { background: var(--text); color: #0F0F0F; border-color: var(--text); }
+    .project-group input {
+      width: 100%;
+      background: #0A0A10;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-md);
+      padding: 11px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .time-row {
+      flex: 3;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .time-field {
+      flex: 1;
+    }
+    .time-field input {
+      width: 100%;
+      color: var(--text);
 
-    .total-bar {
+      background: #0A0A10;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      font-size: 17px;
+      font-family: 'DM Mono', monospace;
+    }
+    .type-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .work-card {
+      flex: 1;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 60px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 16px;
-      margin-top: 8px;
-      border: 1px solid var(--border-md);
-      border-radius: var(--radius-sm);
-      background: rgba(255,255,255,0.06);
-    }
-    .total-label { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
-    .total-amount { font-family: var(--font-mono); font-size: 20px; font-weight: 500; }
-
-    /* Cloud Sync Card */
-    .sync-field-group {
-      margin-bottom: 14px;
-    }
-    .sync-field-group label {
-      display: block;
-      font-size: 12px;
-      font-weight: 500;
-      margin-bottom: 4px;
-      color: var(--text-muted);
-    }
-    .sync-field-group input {
-      width: 100%;
-      background: #0a0a0a;
-      border: 1px solid var(--border-md);
-      border-radius: var(--radius-sm);
-      padding: 8px 12px;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 13px;
-    }
-    .sync-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-      margin-bottom: 6px;
-    }
-    .sync-btn {
-      background: #252525;
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
       cursor: pointer;
       transition: 0.1s;
     }
-    .sync-btn.cloud { background: #1e3a3a; border-color: #3a6e6e; color: #a5f0e0; }
-    .sync-btn:hover { filter: brightness(1.2); }
-    .cloud-status {
-      font-size: 11px;
-      font-family: var(--font-mono);
+    .work-card:hover {
+      background: rgba(255,255,255,0.06);
+      transform: scale(0.98);
+    }
+    .work-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .icon-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .health .icon-badge { background: var(--health-bg); color: var(--health-fg); }
+    .english .icon-badge { background: var(--english-bg); color: var(--english-fg); }
+    .arabic .icon-badge { background: var(--arabic-bg); color: var(--arabic-fg); }
+    .work-info h4 { font-size: 14px; font-weight: 600; }
+    .work-info p { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+    .arrow-symbol { color: var(--text-faint); font-size: 18px; }
+
+    /* monthly grouping */
+    .month-section {
+      margin-bottom: 1.5rem;
+      border-radius: var(--radius-lg);
+      background: var(--surface-elevated);
+      padding: 0.2rem 0 0.8rem 0;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1.2rem;
+      background: rgba(0,0,0,0.3);
+      cursor: pointer;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+    .month-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .month-stats {
+      font-family: monospace;
+      font-size: 13px;
       color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 4px 12px;
+      border-radius: 30px;
+    }
+    .chevron {
+      transition: transform 0.2s;
+      font-size: 18px;
+    }
+    .month-records {
+      padding: 0.8rem 1rem;
+      transition: 0.1s;
+    }
+    .month-records.collapsed {
+      display: none;
+    }
+    .record-item {
+      background: #101018;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-left: 4px solid;
+    }
+    .record-item.health-rec { border-left-color: var(--health-fg); }
+    .record-item.english-rec { border-left-color: var(--english-fg); }
+    .record-item.arabic-rec { border-left-color: var(--arabic-fg); }
+    .rec-header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .project-name-badge {
+      background: rgba(255,255,255,0.07);
+      padding: 3px 10px;
+      border-radius: 40px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    .rec-type {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .rec-cost {
+      font-family: monospace;
+      font-weight: 700;
+      background: #00000040;
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+    .rec-duration {
+      font-size: 11px;
+      font-family: monospace;
+      color: var(--text-muted);
+      margin: 5px 0;
+    }
+    .delete-rec-btn {
+      background: none;
+      border: none;
+      color: var(--text-faint);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 20px;
+    }
+    .delete-rec-btn:hover { background: #3A1212; color: var(--danger); }
+
+    .empty-month {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--text-faint);
+      font-size: 13px;
+    }
+
+    /* filter row + total panel */
+    .filter-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       margin-top: 8px;
-      border-top: 1px solid var(--border);
-      padding-top: 8px;
+      margin-bottom: 12px;
+    }
+    .project-filter {
+      background: #14141C;
+      border: 1px solid var(--border-md);
+      border-radius: 60px;
+      padding: 8px 15px;
+      font-family: monospace;
+      color: var(--text);
+      flex: 2;
+      max-width: 260px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
+      background: transparent;
+      border: 1px solid var(--border-md);
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-weight: 500;
+      font-size: 13px;
+      cursor: pointer;
+      transition: 0.1s;
+      color: var(--text);
+
+    }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0B0B0F;
+    }
+    .total-glass {
+      background: #0A0A10;
+      border-radius: 80px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      border: 1px solid var(--border-md);
+    }
+    .total-number {
+      font-size: 26px;
+      font-weight: 700;
+      font-family: monospace;
     }
     .toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 20px;
       left: 50%;
-      transform: translateX(-50%) translateY(8px);
-      background: var(--text);
-      color: #0c0c0c;
+      transform: translateX(-50%);
+      background: white;
+      color: black;
+      padding: 8px 18px;
+      border-radius: 60px;
+      font-family: monospace;
       font-size: 13px;
-      font-family: var(--font-mono);
-      padding: 9px 18px;
-      border-radius: 20px;
       opacity: 0;
+      transition: 0.2s;
       pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-      white-space: nowrap;
       z-index: 999;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-      font-weight: 500;
     }
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #json-file-input { display: none; }
-    @media (max-width: 480px) { .action-row { flex-direction: column; } .sync-buttons { flex-direction: column; } .toast { white-space: normal; max-width: 90vw; text-align: center; } }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(-4px); }
   </style>
 </head>
 <body>
-
 <div class="app">
-  <div class="header">
-    <p class="header-eyebrow">Freelance Tracker · Cloud Persistent (JSONBin)</p>
-    <h1 class="header-title">Work Records Cross‑Device</h1>
-    <p class="header-sub">Automatically sync records via cloud JSON → access from any device</p>
+  <div class="hero">
+    <div class="hero-badge">📆 MONTHLY SEPARATION</div>
+    <h1>Work Ledger · each month alone</h1>
+    <div class="sub">Records are grouped by month automatically — you can collapse months, filter by project, and see totals per month or global.</div>
   </div>
 
-  <!-- Time input card -->
+  <!-- entry card -->
   <div class="card">
-    <p class="card-label">⏱️ Time worked</p>
-    <div class="time-row">
-      <div class="field"><label for="hours-input">Hours</label><div class="field-inner"><input type="number" id="hours-input" min="0" max="23" placeholder="0" /><span class="field-unit">hr</span></div></div>
-      <div class="field"><label for="mins-input">Minutes</label><div class="field-inner"><input type="number" id="mins-input" min="0" max="59" placeholder="0" /><span class="field-unit">min</span></div></div>
-    </div>
-  </div>
-
-  <!-- Work type buttons -->
-  <div class="card">
-    <p class="card-label">📋 Work type</p>
-    <div class="type-grid">
-      <button class="type-btn health" id="btnHealth"><span class="type-icon">H</span><span class="type-info"><span class="type-name">Healthcare</span><span class="type-rate">450 EGP / hour</span></span><span class="type-arrow">→</span></button>
-      <button class="type-btn english" id="btnEnglish"><span class="type-icon">E</span><span class="type-info"><span class="type-name">English Customer</span><span class="type-rate">350 EGP / hour</span></span><span class="type-arrow">→</span></button>
-      <button class="type-btn arabic" id="btnArabic"><span class="type-icon">A</span><span class="type-info"><span class="type-name">Arabic Customer</span><span class="type-rate">250 EGP / hour</span></span><span class="type-arrow">→</span></button>
+    <div class="card-header"><span>➕ ADD ENTRY</span><span>seconds precision</span></div>
+    <div class="flex-inputs">
+      <div class="project-group">
+        <label>Project title</label>
+        <input type="text" id="projectTitle" placeholder="e.g., Dashboard Redesign, Client X" autocomplete="off">
+      </div>
+      <div class="time-row">
+        <div class="time-field"><label>Hours</label><input type="number" id="hoursIn" value="0" min="0" max="23"></div>
+        <div class="time-field"><label>Minutes</label><input type="number" id="minsIn" value="0" min="0" max="59"></div>
+        <div class="time-field"><label>Seconds</label><input type="number" id="secsIn" value="0" min="0" max="59"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Records + Cloud Sync card -->
+  <!-- work type -->
   <div class="card">
-    <div class="records-header"><p class="card-label" style="margin:0;">📌 Records</p><span class="records-count" id="record-count">0 entries</span></div>
-    <div class="records-list" id="records-list">
-      <div class="empty-state" id="empty-state"><span class="empty-icon">📋</span>No records yet.<br>Select a work type above to log your first session.</div>
+    <div class="card-header">⚡ HOURLY RATE</div>
+    <div class="type-buttons">
+      <div class="work-card health" data-type="Healthcare" data-rate="450" data-color="health">
+        <div class="work-left"><div class="icon-badge">H</div><div class="work-info"><h4>Healthcare</h4><p>450 EGP/h</p></div></div><div class="arrow-symbol">→</div>
+      </div>
+      <div class="work-card english" data-type="English Customer" data-rate="350" data-color="english">
+        <div class="work-left"><div class="icon-badge">E</div><div class="work-info"><h4>English Customer</h4><p>350 EGP/h</p></div></div><div class="arrow-symbol">→</div>
+      </div>
+      <div class="work-card arabic" data-type="Arabic Customer" data-rate="250" data-color="arabic">
+        <div class="work-left"><div class="icon-badge">A</div><div class="work-info"><h4>Arabic Customer</h4><p>250 EGP/h</p></div></div><div class="arrow-symbol">→</div>
+      </div>
     </div>
+  </div>
 
-    <!-- Action row: local tools -->
-    <div class="action-row">
-      <button class="action-btn" id="calcTotalBtn">💰 Calculate Total</button>
-      <button class="action-btn export-btn" id="exportJsonBtn">📁 Export as JSON</button>
-      <button class="action-btn import-btn" id="importJsonBtn">📂 Import from JSON</button>
-    </div>
-    <input type="file" id="json-file-input" accept=".json,application/json" />
+  <!-- Monthly records container -->
+  <div class="card" style="padding-bottom: 0.8rem;">
+    <div class="card-header">📂 MONTHLY BREAKDOWN (click to collapse)</div>
+    <div id="monthlyContainer" class="monthly-container"></div>
 
-    <!-- CLOUD SYNC SECTION - JSONBin.io cross-device auto JSON file -->
-    <div style="margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px;">
-      <p class="card-label" style="margin-bottom: 10px;">☁️ CLOUD SYNC (cross‑device persistence)</p>
-      <div class="sync-field-group">
-        <label>🔑 JSONBin.io Bin ID</label>
-        <input type="text" id="binIdInput" placeholder="e.g., 5f6e9a8b3c4d5e6f7g8h9i0j" />
+    <!-- project filter + totals -->
+    <div class="filter-toolbar">
+      <select id="projectFilterMonthly" class="project-filter">
+        <option value="ALL">🔍 All projects</option>
+      </select>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="calcTotalGlobalBtn">💰 TOTAL (all months)</button>
+        <button class="btn" id="calcFilteredProjectBtn">📌 Total for selected project</button>
       </div>
-      <div class="sync-field-group">
-        <label>🔒 API Key (optional, required for private bins)</label>
-        <input type="password" id="apiKeyInput" placeholder="Leave empty for public bin" />
-      </div>
-      <div class="sync-buttons">
-        <button class="sync-btn cloud" id="pushCloudBtn">⬆️ PUSH records to cloud</button>
-        <button class="sync-btn cloud" id="pullCloudBtn">⬇️ PULL from cloud (replace local)</button>
-        <button class="sync-btn" id="saveCloudSettingsBtn">💾 Save Cloud Settings</button>
-      </div>
-      <div class="cloud-status" id="cloudStatusMsg">
-        ⚡ Not connected. Enter Bin ID & save settings, then push/pull. Data stored on JSONBin.io — accessible from any device.
-      </div>
-      <div style="font-size: 10px; color: var(--text-faint); margin-top: 8px;">
-        🔁 <strong>Auto-sync ON</strong> — after enabling, every add/delete will automatically push to cloud. Settings + Auto-sync toggle below.
-      </div>
-      <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; cursor: pointer;">
-        <input type="checkbox" id="autoSyncToggle" /> 🤖 Auto-sync to cloud (on every change)
-      </label>
     </div>
-
-    <div class="total-bar" id="total-bar" style="display:none;"><span class="total-label">Total earnings</span><span class="total-amount" id="total-amount">0.00 EGP</span></div>
-    <div style="margin-top: 14px; font-size: 11px; color: var(--text-faint); text-align: center; border-top: 1px solid var(--border); padding-top: 12px;">
-      💾 Data auto-saves in browser. Use <strong>Cloud Sync</strong> to keep records forever across phones/laptops. Create free bin at JSONBin.io
+    <div class="total-glass" id="totalArea">
+      <span>💵 EARNINGS</span>
+      <span class="total-number" id="dynamicTotalSpan">0.00 EGP</span>
     </div>
+    <p style="font-size: 11px; margin-top: 10px; text-align: right; color: #7F7F8B;">✨ Each month is isolated — records never mix across months, you can collapse/expand monthly lists.</p>
   </div>
 </div>
-<div class="toast" id="toast"></div>
+<div id="toastMsg" class="toast">✨</div>
 
 <script>
-  // --------------------------------------------------------------
-  // CORE PERSISTENCE + CLOUD JSONBIN.IO INTEGRATION
-  // --------------------------------------------------------------
-  const STORAGE_KEY = 'work_records_v3';
-  const CLOUD_SETTINGS_KEY = 'cloud_sync_settings';
+  // ---------- STORAGE ----------
+  const STORAGE_KEY = 'monthly_work_records_v2_separated';
+  let allRecords = []; // each record has timestamp, monthKey etc.
 
-  let records = [];
+  // DOM elements
+  const projectTitleInput = document.getElementById('projectTitle');
+  const hoursIn = document.getElementById('hoursIn');
+  const minsIn = document.getElementById('minsIn');
+  const secsIn = document.getElementById('secsIn');
+  const monthlyContainer = document.getElementById('monthlyContainer');
+  const projectFilterMonthly = document.getElementById('projectFilterMonthly');
+  const dynamicTotalSpan = document.getElementById('dynamicTotalSpan');
+  const calcTotalGlobalBtn = document.getElementById('calcTotalGlobalBtn');
+  const calcFilteredProjectBtn = document.getElementById('calcFilteredProjectBtn');
 
-  // ----- Helper functions -------------------------------------------------
-  function showToast(msg, isError = false) {
-    const toast = document.getElementById('toast');
+  // helper: get month key from date (YYYY-MM)
+  function getMonthKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  }
+  function getMonthDisplayName(monthKey) {
+    const [year, month] = monthKey.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, 1);
+    return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  }
+
+  // add new record
+  function addRecord(workType, ratePerHour, colorClass) {
+    let project = projectTitleInput.value.trim();
+    if (project === "") project = "Untitled Project";
+    let hours = parseInt(hoursIn.value) || 0;
+    let mins = parseInt(minsIn.value) || 0;
+    let secs = parseInt(secsIn.value) || 0;
+    hours = Math.min(23, Math.max(0, hours));
+    mins = Math.min(59, Math.max(0, mins));
+    secs = Math.min(59, Math.max(0, secs));
+    if (hours === 0 && mins === 0 && secs === 0) {
+      showToast("⏳ Please add some time (hours/minutes/seconds)", 1500);
+      return;
+    }
+    const decimalHours = hours + mins/60 + secs/3600;
+    const costRaw = decimalHours * ratePerHour;
+    const finalCost = parseFloat(costRaw.toFixed(2));
+    const now = new Date();
+    const record = {
+      id: Date.now() + Math.random() * 1000,
+      projectTitle: project,
+      type: workType,
+      rate: ratePerHour,
+      color: colorClass,
+      hours: hours,
+      minutes: mins,
+      seconds: secs,
+      cost: finalCost,
+      timestamp: now.toISOString(),
+      monthKey: getMonthKey(now)
+    };
+    allRecords.push(record);
+    saveToLocal();
+    renderMonthlyView();
+    // reset time fields (keep project for convenience)
+    hoursIn.value = "0";
+    minsIn.value = "0";
+    secsIn.value = "0";
+    showToast(`✅ "${project}" · ${workType} · ${finalCost} EGP`, 1500);
+    updateTotalBasedOnFilter();
+  }
+
+  function deleteRecord(recordId) {
+    allRecords = allRecords.filter(r => r.id !== recordId);
+    saveToLocal();
+    renderMonthlyView();
+    updateTotalBasedOnFilter();
+    showToast("🗑️ Record deleted", 1200);
+  }
+
+  // group records by monthKey, sort desc (latest first)
+  function groupByMonth(recordsArray) {
+    const groups = new Map();
+    recordsArray.forEach(rec => {
+      const key = rec.monthKey;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(rec);
+    });
+    // sort months descending (newest first)
+    const sortedMonths = Array.from(groups.keys()).sort((a,b) => b.localeCompare(a));
+    return { groups, sortedMonths };
+  }
+
+  // render monthly UI with collapsible sections
+  function renderMonthlyView() {
+    const { groups, sortedMonths } = groupByMonth(allRecords);
+    const selectedProject = projectFilterMonthly.value;
+    // update filter dropdown dynamically
+    const uniqueProjects = [...new Set(allRecords.map(r => r.projectTitle))];
+    const currentFilterVal = projectFilterMonthly.value;
+    projectFilterMonthly.innerHTML = '<option value="ALL">🔍 All projects</option>';
+    uniqueProjects.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p;
+      opt.textContent = `📁 ${p}`;
+      projectFilterMonthly.appendChild(opt);
+    });
+    if (currentFilterVal !== "ALL" && uniqueProjects.includes(currentFilterVal)) {
+      projectFilterMonthly.value = currentFilterVal;
+    } else if (currentFilterVal !== "ALL") {
+      projectFilterMonthly.value = "ALL";
+    } else {
+      projectFilterMonthly.value = currentFilterVal;
+    }
+
+    if (allRecords.length === 0) {
+      monthlyContainer.innerHTML = `<div class="empty-month" style="background:#111; border-radius:20px; padding:2rem;">📭 No entries yet. Add work above — each month will be isolated automatically.</div>`;
+      return;
+    }
+
+    let html = '';
+    for (let monthKey of sortedMonths) {
+      let recordsList = groups.get(monthKey);
+      // apply project filter if needed
+      let filteredRecs = recordsList;
+      if (projectFilterMonthly.value !== "ALL") {
+        filteredRecs = recordsList.filter(r => r.projectTitle === projectFilterMonthly.value);
+      }
+      const monthTotal = filteredRecs.reduce((sum, r) => sum + r.cost, 0);
+      const monthDisplay = getMonthDisplayName(monthKey);
+      const recordsCount = filteredRecs.length;
+      // generate records HTML
+      let recordsHtml = '';
+      if (filteredRecs.length === 0) {
+        recordsHtml = `<div class="empty-month">✨ No records for this month with current filter</div>`;
+      } else {
+        filteredRecs.forEach(rec => {
+          let durationStr = '';
+          if (rec.hours > 0) durationStr += `${rec.hours}h `;
+          if (rec.minutes > 0) durationStr += `${rec.minutes}m `;
+          if (rec.seconds > 0) durationStr += `${rec.seconds}s`;
+          if (durationStr === '') durationStr = '0s';
+          const dateObj = new Date(rec.timestamp);
+          const dayStr = dateObj.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+          let borderClass = '';
+          if (rec.color === 'health') borderClass = 'health-rec';
+          else if (rec.color === 'english') borderClass = 'english-rec';
+          else borderClass = 'arabic-rec';
+          recordsHtml += `
+            <div class="record-item ${borderClass}">
+              <div class="rec-header">
+                <div><span class="project-name-badge">📌 ${escapeHtml(rec.projectTitle)}</span> · <span class="rec-type">${rec.type}</span></div>
+                <div class="rec-cost">${rec.cost.toFixed(2)} EGP</div>
+              </div>
+              <div class="rec-duration">⏱️ ${durationStr} &nbsp;|&nbsp; ${dayStr} at ${dateObj.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+              <div style="display: flex; justify-content: flex-end; margin-top: 4px;">
+                <button class="delete-rec-btn" data-id="${rec.id}">✕ Remove</button>
+              </div>
+            </div>
+          `;
+        });
+      }
+      const collapseId = `collapse-${monthKey}`;
+      html += `
+        <div class="month-section" data-month="${monthKey}">
+          <div class="month-header" data-toggle="${collapseId}">
+            <div class="month-name">
+              <span>📅 ${monthDisplay}</span>
+              <span class="month-stats">${recordsCount} entries · ${monthTotal.toFixed(2)} EGP</span>
+            </div>
+            <span class="chevron" id="chevron-${monthKey}">▼</span>
+          </div>
+          <div class="month-records" id="${collapseId}">
+            ${recordsHtml}
+          </div>
+        </div>
+      `;
+    }
+    monthlyContainer.innerHTML = html;
+
+    // attach delete events
+    document.querySelectorAll('.delete-rec-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = parseFloat(btn.getAttribute('data-id'));
+        deleteRecord(id);
+      });
+    });
+    // attach collapse toggle events
+    document.querySelectorAll('.month-header').forEach(header => {
+      header.addEventListener('click', (e) => {
+        const toggleId = header.getAttribute('data-toggle');
+        const targetDiv = document.getElementById(toggleId);
+        if (targetDiv) {
+          targetDiv.classList.toggle('collapsed');
+          const monthKeyAttr = header.closest('.month-section')?.getAttribute('data-month');
+          if (monthKeyAttr) {
+            const chev = document.getElementById(`chevron-${monthKeyAttr}`);
+            if (chev) chev.style.transform = targetDiv.classList.contains('collapsed') ? 'rotate(-90deg)' : 'rotate(0deg)';
+          }
+        }
+      });
+    });
+  }
+
+  // ---- TOTAL LOGIC: TOTAL ALL or TOTAL SELECTED PROJECT (across months but each month remains separate but global calculation)
+  function calculateGlobalTotal() {
+    if (allRecords.length === 0) {
+      showToast("No records yet", 1000);
+      dynamicTotalSpan.innerText = "0.00 EGP";
+      return;
+    }
+    const total = allRecords.reduce((sum, r) => sum + r.cost, 0);
+    dynamicTotalSpan.innerText = total.toFixed(2) + " EGP";
+    showToast(`💰 Total across ALL months: ${total.toFixed(2)} EGP`, 1800);
+  }
+
+  function calculateSelectedProjectTotal() {
+    const selectedProj = projectFilterMonthly.value;
+    if (selectedProj === "ALL") {
+      showToast("Please choose a specific project from the filter dropdown", 1600);
+      return;
+    }
+    const filtered = allRecords.filter(r => r.projectTitle === selectedProj);
+    if (filtered.length === 0) {
+      showToast(`No records found for project "${selectedProj}"`, 1500);
+      dynamicTotalSpan.innerText = "0.00 EGP";
+      return;
+    }
+    const total = filtered.reduce((sum, r) => sum + r.cost, 0);
+    dynamicTotalSpan.innerText = total.toFixed(2) + " EGP";
+    showToast(`📌 Project "${selectedProj}" total: ${total.toFixed(2)} EGP (across months)`, 2000);
+  }
+
+  function updateTotalBasedOnFilter() {
+    const selected = projectFilterMonthly.value;
+    if (selected === "ALL") {
+      const total = allRecords.reduce((s,r) => s+r.cost,0);
+      dynamicTotalSpan.innerText = total.toFixed(2) + " EGP";
+    } else {
+      const filtered = allRecords.filter(r => r.projectTitle === selected);
+      const sum = filtered.reduce((s,r) => s+r.cost,0);
+      dynamicTotalSpan.innerText = sum.toFixed(2) + " EGP";
+    }
+  }
+
+  // event: when filter changes, re-render monthly UI to reflect filtered entries within months, and also update total
+  function onFilterChange() {
+    renderMonthlyView();
+    updateTotalBasedOnFilter();
+  }
+
+  // storage
+  function saveToLocal() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(allRecords));
+  }
+  function loadFromLocal() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        allRecords = JSON.parse(saved);
+      } catch(e) { allRecords = []; }
+    } else allRecords = [];
+    renderMonthlyView();
+    updateTotalBasedOnFilter();
+  }
+
+  // toast
+  let toastTimer;
+  function showToast(msg, duration = 1700) {
+    const toast = document.getElementById('toastMsg');
     toast.textContent = msg;
     toast.classList.add('show');
-    if (window.toastTimer) clearTimeout(window.toastTimer);
-    window.toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  // bind work types
+  function bindWorkTypes() {
+    document.querySelectorAll('.work-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const type = card.getAttribute('data-type');
+        const rate = parseFloat(card.getAttribute('data-rate'));
+        const color = card.getAttribute('data-color');
+        addRecord(type, rate, color);
+      });
+    });
+  }
+
+  function bindButtons() {
+    calcTotalGlobalBtn.addEventListener('click', calculateGlobalTotal);
+    calcFilteredProjectBtn.addEventListener('click', calculateSelectedProjectTotal);
+    projectFilterMonthly.addEventListener('change', onFilterChange);
   }
 
   function escapeHtml(str) {
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
   }
 
-  function formatDate(isoString) {
-    const d = new Date(isoString);
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const day = String(d.getDate()).padStart(2,'0');
-    const month = months[d.getMonth()];
-    const year = d.getFullYear();
-    let h = d.getHours();
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    if (h > 12) h -= 12;
-    if (h === 0) h = 12;
-    const min = String(d.getMinutes()).padStart(2,'0');
-    return `${day} ${month} ${year} — ${h}:${min} ${ampm}`;
+  function init() {
+    loadFromLocal();
+    bindWorkTypes();
+    bindButtons();
+    // initial values for time
+    hoursIn.value = "0";
+    minsIn.value = "0";
+    secsIn.value = "0";
   }
-
-  function saveToLocalStorage() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    } catch(e) { showToast('⚠️ Local storage failed'); }
-  }
-
-  function loadFromLocalStorage() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved && Array.isArray(JSON.parse(saved))) records = JSON.parse(saved);
-      else records = [];
-    } catch(e) { records = []; }
-  }
-
-  // Render UI
-  function renderAll() {
-    const list = document.getElementById('records-list');
-    const countEl = document.getElementById('record-count');
-    if (!list) return;
-    countEl.textContent = records.length + (records.length === 1 ? ' entry' : ' entries');
-    if (records.length === 0) {
-      list.innerHTML = `<div class="empty-state"><span class="empty-icon">📋</span>No records yet.<br>Select a work type above to get started.</div>`;
-      return;
-    }
-    list.innerHTML = [...records].reverse().map(r => `
-      <div class="record-item">
-        <span class="record-dot ${r.colorKey || (r.type === 'Healthcare' ? 'health' : r.type === 'English Customer' ? 'english' : 'arabic')}"></span>
-        <div class="record-body">
-          <div class="record-top"><span class="record-type">${escapeHtml(r.type)}</span><span class="record-cost">${r.cost.toFixed(2)} EGP</span></div>
-          <p class="record-meta">${r.hours}h ${r.minutes}m &nbsp;·&nbsp; ${formatDate(r.timestamp)}</p>
-        </div>
-        <button class="del-btn" onclick="deleteRecordById(${r.id})" title="Delete">✕</button>
-      </div>
-    `).join('');
-  }
-
-  // Modify records and persist
-  function persistAndRender(triggerCloudPush = true) {
-    saveToLocalStorage();
-    renderAll();
-    document.getElementById('total-bar').style.display = 'none';
-    if (triggerCloudPush && autoSyncEnabled() && cloudSettingsValid()) {
-      pushToCloud(true); // silent push
-    }
-  }
-
-  window.deleteRecordById = function(id) {
-    records = records.filter(r => r.id !== id);
-    persistAndRender(true);
-    showToast('🗑️ Record deleted');
-  };
-
-  // Add record logic
-  function addRecordCore(type, rate, colorKey) {
-    const hoursEl = document.getElementById('hours-input');
-    const minsEl = document.getElementById('mins-input');
-    let h = parseInt(hoursEl.value) || 0;
-    let m = parseInt(minsEl.value) || 0;
-    if (h === 0 && m === 0) { showToast('⏳ Enter at least 1 minute.'); return false; }
-    if (m > 59) { showToast('Minutes must be 0-59.'); return false; }
-    if (h < 0 || m < 0) { showToast('Positive values only.'); return false; }
-    const totalHours = h + (m / 60);
-    const cost = parseFloat((totalHours * rate).toFixed(2));
-    const record = {
-      id: Date.now(),
-      type: type,
-      colorKey: colorKey,
-      rate: rate,
-      hours: h,
-      minutes: m,
-      cost: cost,
-      timestamp: new Date().toISOString()
-    };
-    records.push(record);
-    hoursEl.value = '';
-    minsEl.value = '';
-    persistAndRender(true);
-    showToast(`✓ ${type} logged — ${cost} EGP`);
-    return true;
-  }
-
-  // Cloud Settings
-  function getCloudSettings() {
-    try {
-      const raw = localStorage.getItem(CLOUD_SETTINGS_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch(e) {}
-    return { binId: '', apiKey: '', autoSync: false };
-  }
-
-  function saveCloudSettings(binId, apiKey, autoSync) {
-    const settings = { binId: binId.trim(), apiKey: apiKey.trim(), autoSync: autoSync };
-    localStorage.setItem(CLOUD_SETTINGS_KEY, JSON.stringify(settings));
-    document.getElementById('binIdInput').value = binId;
-    document.getElementById('apiKeyInput').value = apiKey;
-    document.getElementById('autoSyncToggle').checked = autoSync;
-    updateCloudStatusMsg();
-    showToast('☁️ Cloud settings saved');
-  }
-
-  function autoSyncEnabled() {
-    const settings = getCloudSettings();
-    return settings.autoSync === true;
-  }
-
-  function cloudSettingsValid() {
-    const settings = getCloudSettings();
-    return settings.binId && settings.binId.length > 0;
-  }
-
-  function updateCloudStatusMsg() {
-    const settings = getCloudSettings();
-    const msgDiv = document.getElementById('cloudStatusMsg');
-    if (!settings.binId) {
-      msgDiv.innerHTML = '🔴 Not configured. Enter Bin ID (from JSONBin.io) and save settings. Then Push/Pull.';
-    } else {
-      msgDiv.innerHTML = `✅ Cloud ready (bin: ${settings.binId.substring(0,12)}...) Auto-sync: ${settings.autoSync ? 'ON' : 'OFF'}. Use buttons to sync.`;
-    }
-  }
-
-  // PUSH current records to JSONBin.io
-  async function pushToCloud(silent = false) {
-    const settings = getCloudSettings();
-    if (!settings.binId) { showToast('❌ No Bin ID configured. Save cloud settings first.'); return false; }
-    if (records.length === 0 && !silent) { showToast('📭 No records to push.'); return false; }
-    const url = `https://api.jsonbin.io/v3/bins/${settings.binId}`;
-    const headers = { 'Content-Type': 'application/json' };
-    if (settings.apiKey) headers['X-Master-Key'] = settings.apiKey;
-    try {
-      const payload = { records: records, lastSynced: new Date().toISOString() };
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: headers,
-        body: JSON.stringify(payload)
-      });
-      if (response.ok) {
-        if (!silent) showToast(`☁️ Pushed ${records.length} records to cloud (bin: ${settings.binId})`);
-        else console.log('auto push success');
-        return true;
-      } else {
-        const errText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errText.slice(0,80)}`);
-      }
-    } catch (err) {
-      console.error(err);
-      if (!silent) showToast(`❌ Cloud push failed: ${err.message}`);
-      return false;
-    }
-  }
-
-  // PULL from JSONBin.io - REPLACE local records
-  async function pullFromCloud() {
-    const settings = getCloudSettings();
-    if (!settings.binId) { showToast('❌ No Bin ID. Configure cloud settings.'); return false; }
-    const url = `https://api.jsonbin.io/v3/bins/${settings.binId}/latest`;
-    const headers = {};
-    if (settings.apiKey) headers['X-Master-Key'] = settings.apiKey;
-    try {
-      const response = await fetch(url, { headers });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data = await response.json();
-      let cloudRecords = null;
-      if (data.record && data.record.records && Array.isArray(data.record.records)) cloudRecords = data.record.records;
-      else if (data.records && Array.isArray(data.records)) cloudRecords = data.records;
-      else if (Array.isArray(data)) cloudRecords = data;
-      else if (data.record && Array.isArray(data.record)) cloudRecords = data.record;
-      if (!cloudRecords) throw new Error('Invalid cloud data structure');
-      const isValid = cloudRecords.every(r => r && typeof r === 'object' && 'id' in r && 'type' in r && 'hours' in r);
-      if (!isValid) throw new Error('Cloud records missing required fields');
-      if (cloudRecords.length === 0 && records.length === 0) { showToast('Cloud is empty. Nothing changed.'); return false; }
-      const confirmMsg = `⚠️ Replace local (${records.length} records) with cloud version (${cloudRecords.length} records)? This cannot be undone.`;
-      if (confirm(confirmMsg)) {
-        records = cloudRecords;
-        persistAndRender(false);
-        showToast(`✅ Pulled ${records.length} records from cloud.`);
-        return true;
-      } else { showToast('Pull cancelled.'); return false; }
-    } catch (err) {
-      console.error(err);
-      showToast(`❌ Pull failed: ${err.message}`);
-      return false;
-    }
-  }
-
-  // Calc total
-  function calcTotal() {
-    if (records.length === 0) { showToast('📭 No records to calculate.'); return; }
-    const total = records.reduce((s, r) => s + r.cost, 0);
-    document.getElementById('total-amount').textContent = total.toFixed(2) + ' EGP';
-    document.getElementById('total-bar').style.display = 'flex';
-    showToast(`💰 Total: ${total.toFixed(2)} EGP`);
-  }
-
-  // Export to JSON file
-  function exportToJSON() {
-    if (records.length === 0) { showToast('📭 No records to export.'); return; }
-    const dataStr = JSON.stringify(records, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const timestamp = new Date().toISOString().slice(0,19).replace(/:/g, '-');
-    a.download = `work_records_${timestamp}.json`;
-    a.href = url;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast(`📁 Exported ${records.length} records`);
-  }
-
-  function importFromJSON(file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      try {
-        const imported = JSON.parse(e.target.result);
-        if (!Array.isArray(imported)) throw new Error('Root must be array');
-        if (imported.length === 0) {
-          if (confirm('Empty file will clear all records. Proceed?')) { records = []; persistAndRender(false); showToast('Cleared.'); }
-          return;
-        }
-        const valid = imported.every(r => r && 'type' in r && 'hours' in r && 'minutes' in r && 'cost' in r && 'id' in r);
-        if (!valid) throw new Error('Missing required fields');
-        if (confirm(`Replace current (${records.length}) with imported (${imported.length}) records?`)) {
-          records = imported;
-          persistAndRender(false);
-          showToast(`✅ Imported ${records.length} records.`);
-        }
-      } catch(err) { showToast(`❌ Import error: ${err.message}`); }
-    };
-    reader.readAsText(file);
-  }
-
-  // Setup listeners & init
-  document.addEventListener('DOMContentLoaded', () => {
-    loadFromLocalStorage();
-    renderAll();
-
-    // Restore cloud settings UI
-    const cloudSettings = getCloudSettings();
-    document.getElementById('binIdInput').value = cloudSettings.binId || '';
-    document.getElementById('apiKeyInput').value = cloudSettings.apiKey || '';
-    document.getElementById('autoSyncToggle').checked = cloudSettings.autoSync === true;
-    updateCloudStatusMsg();
-
-    // Work buttons
-    document.getElementById('btnHealth').onclick = () => addRecordCore('Healthcare', 450, 'health');
-    document.getElementById('btnEnglish').onclick = () => addRecordCore('English Customer', 350, 'english');
-    document.getElementById('btnArabic').onclick = () => addRecordCore('Arabic Customer', 250, 'arabic');
-    document.getElementById('calcTotalBtn').onclick = calcTotal;
-    document.getElementById('exportJsonBtn').onclick = exportToJSON;
-
-    // Import logic
-    const fileInput = document.getElementById('json-file-input');
-    document.getElementById('importJsonBtn').onclick = () => fileInput.click();
-    fileInput.onchange = (e) => { if(e.target.files[0]) importFromJSON(e.target.files[0]); fileInput.value = ''; };
-
-    // Cloud actions
-    document.getElementById('saveCloudSettingsBtn').onclick = () => {
-      const binId = document.getElementById('binIdInput').value.trim();
-      const apiKey = document.getElementById('apiKeyInput').value.trim();
-      const autoSync = document.getElementById('autoSyncToggle').checked;
-      saveCloudSettings(binId, apiKey, autoSync);
-    };
-    document.getElementById('pushCloudBtn').onclick = async () => { await pushToCloud(false); };
-    document.getElementById('pullCloudBtn').onclick = async () => { await pullFromCloud(); };
-
-    // Ensure auto-sync toggling saves settings
-    document.getElementById('autoSyncToggle').onchange = () => {
-      const settings = getCloudSettings();
-      saveCloudSettings(settings.binId, settings.apiKey, document.getElementById('autoSyncToggle').checked);
-    };
-
-    // Hide total bar when new records added via any method (already handled in persistAndRender)
-  });
+  init();
 </script>
 </body>
 </html>
